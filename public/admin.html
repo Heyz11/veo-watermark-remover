@@ -3,212 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Veo Watermark Remover</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Admin Panel — VeoTools</title>
+    <link rel="stylesheet" href="saybriefly.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; }
-        .font-display { font-family: 'Space Grotesk', sans-serif; }
-        .sidebar { transition: all 0.3s ease; }
-        .menu-item { transition: all 0.2s ease; }
-        .menu-item:hover { background: rgba(20, 184, 166, 0.1); }
-        .menu-item.active { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); color: white; }
-        .stat-card { transition: all 0.3s ease; }
-        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .admin-layout { display: flex; min-height: 100vh; }
+        .admin-sidebar { width: 240px; background: var(--color-cream-paper); border-right: 1px solid var(--color-pencil-gray); padding: var(--space-3); display: flex; flex-direction: column; }
+        .admin-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .admin-header { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-pencil-gray); background: var(--color-cream-paper); }
+        .admin-content { flex: 1; overflow-y: auto; padding: var(--space-4); }
+        .admin-nav-item { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-weight: 500; font-size: 14px; cursor: pointer; transition: all 0.2s; color: var(--color-forest-ink); text-decoration: none; margin-bottom: 4px; }
+        .admin-nav-item:hover { background: rgba(26, 51, 0, 0.05); }
+        .admin-nav-item.active { background: var(--color-sticky-note-mint); }
+        .admin-stat-card { background: var(--color-cream-paper); border: 1px solid var(--color-forest-ink); border-radius: var(--radius-md); padding: var(--space-3); }
+        .admin-table { width: 100%; border-collapse: collapse; }
+        .admin-table th { text-align: left; padding: var(--space-1) var(--space-2); font-weight: 600; font-size: 14px; border-bottom: 1px solid var(--color-pencil-gray); }
+        .admin-table td { padding: var(--space-1) var(--space-2); font-size: 14px; border-bottom: 1px solid var(--color-whisper-gray); }
+        .admin-table tr:hover { background: rgba(26, 51, 0, 0.02); }
+        .status-active { background: var(--color-sticky-note-mint); color: var(--color-forest-ink); padding: 2px 8px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+        .status-revoked { background: var(--color-sticky-note-blush); color: var(--color-forest-ink); padding: 2px 8px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+        .status-processing { background: var(--color-highlighter-yellow); color: var(--color-forest-ink); padding: 2px 8px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+        .status-completed { background: var(--color-sticky-note-mint); color: var(--color-forest-ink); padding: 2px 8px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+        .status-failed { background: var(--color-sticky-note-blush); color: var(--color-forest-ink); padding: 2px 8px; border-radius: var(--radius-full); font-size: 12px; font-weight: 600; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(26, 51, 0, 0.3); display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .modal { background: var(--color-cream-paper); border: 1px solid var(--color-forest-ink); border-radius: var(--radius-md); padding: var(--space-4); width: 100%; max-width: 400px; }
+        .modal input, .modal select { width: 100%; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-pencil-gray); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; margin-top: var(--space-1); }
+        .modal input:focus, .modal select:focus { outline: none; border-color: var(--color-forest-ink); }
+        @media (max-width: 768px) { .admin-sidebar { display: none; } }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
     <!-- Login Page -->
-    <div id="login-page" class="min-h-screen flex items-center justify-center">
-        <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-            <div class="text-center mb-8">
-                <h1 class="font-display text-3xl font-bold text-gray-900">Veo <span class="text-teal-500">Admin</span></h1>
-                <p class="text-gray-500 mt-2">Sign in to your admin panel</p>
+    <div id="login-page" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="card" style="width: 100%; max-width: 400px; padding: var(--space-5);">
+            <div class="text-center mb-4">
+                <div class="nav-logo-mark" style="margin: 0 auto var(--space-2);">V</div>
+                <h2 class="heading-md">VeoTools Admin</h2>
+                <p class="caption mt-1" style="color: var(--color-pencil-gray);">Sign in to manage your service</p>
             </div>
-            <form id="login-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                    <input type="text" id="login-username" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="admin">
+            <form id="login-form">
+                <div class="mb-2">
+                    <label class="caption" style="font-weight: 600;">Username</label>
+                    <input type="text" id="login-username" required style="width: 100%; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-pencil-gray); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; margin-top: var(--space-1);">
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Enter password">
+                <div class="mb-3">
+                    <label class="caption" style="font-weight: 600;">Password</label>
+                    <input type="password" id="login-password" required style="width: 100%; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-pencil-gray); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 14px; margin-top: var(--space-1);">
                 </div>
-                <div id="login-error" class="hidden text-red-500 text-sm font-semibold"></div>
-                <button type="submit" class="w-full px-6 py-3 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">
-                    Sign In
-                </button>
+                <div id="login-error" class="hidden mb-2" style="color: var(--color-terracotta); font-size: 14px; font-weight: 500;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Sign In →</button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Panel (hidden until authenticated) -->
-    <div id="admin-panel" class="hidden flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col">
-            <div class="p-6 border-b border-gray-200">
-                <h1 class="font-display text-2xl font-bold text-gray-900">Veo <span class="text-teal-500">Admin</span></h1>
-                <p class="text-xs text-gray-500 mt-1">Management Panel</p>
-            </div>
-            <nav class="flex-1 p-4 space-y-2">
-                <a href="#" class="menu-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="dashboard"><span>📊</span> Dashboard</a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="users"><span>🔑</span> API Keys</a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="usage"><span>📈</span> Usage Stats</a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="jobs"><span>📋</span> Jobs</a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="server"><span>🖥️</span> Server</a>
-            </nav>
-            <div class="p-4 border-t border-gray-200">
-                <button id="logout-btn" class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition">Logout</button>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <header class="bg-white border-b border-gray-200 px-8 py-4">
-                <h2 class="font-display text-2xl font-bold text-gray-900" id="pageTitle">Dashboard</h2>
-                <p class="text-sm text-gray-500" id="pageSubtitle">Overview of your watermark removal service</p>
-            </header>
-
-            <main class="flex-1 overflow-y-auto p-8">
-                <!-- Dashboard Section -->
-                <div id="dashboard-section" class="section">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
-                            <span class="text-3xl">🔑</span>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Active API Keys</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-api-keys">-</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
-                            <span class="text-3xl">📸</span>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Today's Usage</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-today">-</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
-                            <span class="text-3xl">📊</span>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Total Requests</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-total">-</p>
-                        </div>
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
-                            <span class="text-3xl">⚡</span>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Active Jobs</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-jobs">-</p>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 shadow">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Usage (Last 7 Days)</h3>
-                        <canvas id="usageChart"></canvas>
-                    </div>
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="hidden">
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <div class="admin-sidebar">
+                <div class="nav-logo mb-4">
+                    <div class="nav-logo-mark">V</div>
+                    <span class="nav-logo-text">VeoTools</span>
                 </div>
+                <nav>
+                    <a href="#" class="admin-nav-item active" data-section="dashboard">📊 Dashboard</a>
+                    <a href="#" class="admin-nav-item" data-section="users">🔑 API Keys</a>
+                    <a href="#" class="admin-nav-item" data-section="usage">📈 Usage</a>
+                    <a href="#" class="admin-nav-item" data-section="jobs">📋 Jobs</a>
+                    <a href="#" class="admin-nav-item" data-section="server">🖥️ Server</a>
+                </nav>
+                <div style="margin-top: auto;">
+                    <a href="/" class="admin-nav-item">← Back to Site</a>
+                    <button id="logout-btn" class="admin-nav-item" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer; color: var(--color-terracotta);">🚪 Logout</button>
+                </div>
+            </div>
 
-                <!-- API Keys Section -->
-                <div id="users-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="font-display text-xl font-bold text-gray-900">API Keys</h3>
-                            <button id="generate-key-btn" class="px-4 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">+ Generate Key</button>
+            <!-- Main Content -->
+            <div class="admin-main">
+                <div class="admin-header">
+                    <h2 class="heading-md" id="pageTitle">Dashboard</h2>
+                    <p class="caption" id="pageSubtitle">Overview of your watermark removal service</p>
+                </div>
+                <div class="admin-content">
+                    <!-- Dashboard -->
+                    <div id="dashboard-section" class="section-content">
+                        <div class="grid-4 mb-4">
+                            <div class="admin-stat-card">
+                                <div class="stat-number" id="stat-api-keys">-</div>
+                                <div class="stat-label">Active API Keys</div>
+                            </div>
+                            <div class="admin-stat-card" style="background: var(--color-highlighter-yellow);">
+                                <div class="stat-number" id="stat-today">-</div>
+                                <div class="stat-label">Today's Usage</div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-number" id="stat-total">-</div>
+                                <div class="stat-label">Total Requests</div>
+                            </div>
+                            <div class="admin-stat-card" style="background: var(--color-sticky-note-teal);">
+                                <div class="stat-number" id="stat-jobs">-</div>
+                                <div class="stat-label">Active Jobs</div>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                        <div class="card">
+                            <h3 class="heading-sm mb-3">Usage (Last 7 Days)</h3>
+                            <canvas id="usageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- API Keys -->
+                    <div id="users-section" class="section-content hidden">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="heading-sm">API Keys</h3>
+                            <button id="generate-key-btn" class="btn btn-primary">+ Generate Key</button>
+                        </div>
+                        <div class="card" style="padding: 0; overflow: hidden;">
+                            <table class="admin-table">
                                 <thead>
-                                    <tr class="border-b border-gray-200">
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Key</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Name</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Tier</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Today</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Name</th>
+                                        <th>Tier</th>
+                                        <th>Today</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="apiKeysTable"></tbody>
                             </table>
                         </div>
                     </div>
-                </div>
 
-                <!-- Usage Section -->
-                <div id="usage-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow mb-6">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Usage (Last 30 Days)</h3>
-                        <canvas id="usageDetailedChart"></canvas>
+                    <!-- Usage -->
+                    <div id="usage-section" class="section-content hidden">
+                        <div class="card mb-4">
+                            <h3 class="heading-sm mb-3">Usage (Last 30 Days)</h3>
+                            <canvas id="usageDetailedChart"></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="heading-sm mb-3">Top API Keys (Last 7 Days)</h3>
+                            <div id="topUsersList"></div>
+                        </div>
                     </div>
-                    <div class="bg-white rounded-2xl p-6 shadow">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Top API Keys (Last 7 Days)</h3>
-                        <div id="topUsersList" class="space-y-3"></div>
-                    </div>
-                </div>
 
-                <!-- Jobs Section -->
-                <div id="jobs-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-6">Recent Jobs</h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
+                    <!-- Jobs -->
+                    <div id="jobs-section" class="section-content hidden">
+                        <div class="card" style="padding: 0; overflow: hidden;">
+                            <table class="admin-table">
                                 <thead>
-                                    <tr class="border-b border-gray-200">
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Job ID</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Type</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Created</th>
+                                    <tr>
+                                        <th>Job ID</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
                                     </tr>
                                 </thead>
                                 <tbody id="jobsTable"></tbody>
                             </table>
                         </div>
                     </div>
-                </div>
 
-                <!-- Server Section -->
-                <div id="server-section" class="section hidden">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white rounded-2xl p-6 shadow">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Memory Usage</h3>
-                            <div class="text-center">
-                                <p class="font-display text-5xl font-bold text-teal-500" id="server-memory">-</p>
-                                <p class="text-gray-500 mt-2" id="server-memory-detail">-</p>
+                    <!-- Server -->
+                    <div id="server-section" class="section-content hidden">
+                        <div class="grid-2 mb-4">
+                            <div class="admin-stat-card text-center" style="padding: var(--space-5);">
+                                <div class="stat-number" id="server-memory">-</div>
+                                <div class="stat-label" id="server-memory-detail">Memory Usage</div>
+                            </div>
+                            <div class="admin-stat-card text-center" style="background: var(--color-sticky-note-mint); padding: var(--space-5);">
+                                <div class="stat-number" id="server-uptime">-</div>
+                                <div class="stat-label" id="server-platform">Uptime</div>
                             </div>
                         </div>
-                        <div class="bg-white rounded-2xl p-6 shadow">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Uptime</h3>
-                            <div class="text-center">
-                                <p class="font-display text-5xl font-bold text-teal-500" id="server-uptime">-</p>
-                                <p class="text-gray-500 mt-2" id="server-platform">-</p>
-                            </div>
+                        <div class="card">
+                            <h3 class="heading-sm mb-3">Service Status</h3>
+                            <div id="serviceStatus"></div>
                         </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 shadow">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Service Status</h3>
-                        <div class="space-y-3" id="serviceStatus"></div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
 
     <!-- Generate Key Modal -->
-    <div id="key-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 w-full max-w-md">
-            <h3 class="font-display text-xl font-bold text-gray-900 mb-6">Generate New API Key</h3>
-            <form id="key-form" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-                    <input type="text" id="key-name" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+    <div id="key-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 class="heading-sm mb-3">Generate New API Key</h3>
+            <form id="key-form">
+                <div class="mb-2">
+                    <label class="caption" style="font-weight: 600;">Name</label>
+                    <input type="text" id="key-name" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                    <input type="email" id="key-email" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <div class="mb-2">
+                    <label class="caption" style="font-weight: 600;">Email</label>
+                    <input type="email" id="key-email" required>
                 </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tier</label>
-                    <select id="key-tier" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                <div class="mb-3">
+                    <label class="caption" style="font-weight: 600;">Tier</label>
+                    <select id="key-tier">
                         <option value="free">Free (100 req/day)</option>
                         <option value="pro">Pro (1000 req/day)</option>
                     </select>
                 </div>
-                <div class="flex gap-3">
-                    <button type="submit" class="flex-1 px-6 py-3 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">Generate</button>
-                    <button type="button" id="cancel-key" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition">Cancel</button>
+                <div class="flex gap-2">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">Generate</button>
+                    <button type="button" id="cancel-key" class="btn btn-outline" style="flex: 1; justify-content: center;">Cancel</button>
                 </div>
             </form>
         </div>
@@ -219,15 +219,10 @@
     let usageChartInstance = null;
     let usageDetailedChartInstance = null;
 
-    // Check auth on load
     async function checkAuth() {
         const res = await fetch(`${API}/status`);
         const data = await res.json();
-        if (data.authenticated) {
-            showPanel();
-        } else {
-            showLogin();
-        }
+        if (data.authenticated) showPanel(); else showLogin();
     }
 
     function showLogin() {
@@ -241,13 +236,11 @@
         loadDashboard();
     }
 
-    // Login
     document.getElementById('login-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const username = document.getElementById('login-username').value;
         const password = document.getElementById('login-password').value;
         const errorEl = document.getElementById('login-error');
-        
         try {
             const res = await fetch(`${API}/login`, {
                 method: 'POST',
@@ -255,38 +248,26 @@
                 body: JSON.stringify({ username, password })
             });
             const data = await res.json();
-            if (data.success) {
-                showPanel();
-            } else {
-                errorEl.textContent = data.message || 'Login failed';
-                errorEl.classList.remove('hidden');
-            }
-        } catch (err) {
-            errorEl.textContent = 'Connection error';
-            errorEl.classList.remove('hidden');
-        }
+            if (data.success) showPanel();
+            else { errorEl.textContent = data.message || 'Login failed'; errorEl.classList.remove('hidden'); }
+        } catch (err) { errorEl.textContent = 'Connection error'; errorEl.classList.remove('hidden'); }
     });
 
-    // Logout
     document.getElementById('logout-btn').addEventListener('click', async () => {
         await fetch(`${API}/logout`, { method: 'POST' });
         showLogin();
     });
 
-    // Menu navigation
-    document.querySelectorAll('.menu-item').forEach(item => {
+    document.querySelectorAll('.admin-nav-item[data-section]').forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();
             const section = item.dataset.section;
-            document.querySelectorAll('.menu-item').forEach(i => { i.classList.remove('active'); i.classList.add('text-gray-700'); });
+            document.querySelectorAll('.admin-nav-item').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
-            item.classList.remove('text-gray-700');
-            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
             document.getElementById(`${section}-section`).classList.remove('hidden');
-            
             const titles = { dashboard: 'Dashboard', users: 'API Keys', usage: 'Usage Stats', jobs: 'Jobs', server: 'Server' };
             document.getElementById('pageTitle').textContent = titles[section] || section;
-            
             if (section === 'dashboard') loadDashboard();
             if (section === 'users') loadApiKeys();
             if (section === 'usage') loadUsage();
@@ -295,7 +276,6 @@
         });
     });
 
-    // Load Dashboard
     async function loadDashboard() {
         try {
             const res = await fetch(`${API}/dashboard`);
@@ -304,61 +284,49 @@
             document.getElementById('stat-today').textContent = data.stats.todayUsage.toLocaleString();
             document.getElementById('stat-total').textContent = data.stats.totalUsage.toLocaleString();
             document.getElementById('stat-jobs').textContent = data.stats.activeJobs;
-
-            // Chart
             if (usageChartInstance) usageChartInstance.destroy();
             const ctx = document.getElementById('usageChart').getContext('2d');
             usageChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: data.dailyUsage.map(d => d.date),
-                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), backgroundColor: '#14b8a6', borderRadius: 8 }]
+                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), backgroundColor: '#1a3300', borderRadius: 6 }]
                 },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
         } catch (err) { console.error('Dashboard error:', err); }
     }
 
-    // Load API Keys
     async function loadApiKeys() {
         try {
             const res = await fetch(`${API}/api-keys`);
             const data = await res.json();
-            const tbody = document.getElementById('apiKeysTable');
-            tbody.innerHTML = data.apiKeys.map(k => `
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="py-3 px-4"><code class="text-sm font-mono">${k.key}</code></td>
-                    <td class="py-3 px-4">${k.name || '-'}</td>
-                    <td class="py-3 px-4"><span class="px-3 py-1 ${k.tier === 'pro' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'} rounded-full text-sm font-semibold">${k.tier}</span></td>
-                    <td class="py-3 px-4">${k.today_usage}/${k.daily_limit}</td>
-                    <td class="py-3 px-4"><span class="px-3 py-1 ${k.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-full text-xs font-semibold">${k.active ? 'Active' : 'Revoked'}</span></td>
-                    <td class="py-3 px-4">${k.active ? `<button onclick="revokeKey(${k.id})" class="text-red-500 hover:text-red-700 font-semibold">Revoke</button>` : '-'}</td>
+            document.getElementById('apiKeysTable').innerHTML = data.apiKeys.map(k => `
+                <tr>
+                    <td><code class="micro">${k.key}</code></td>
+                    <td>${k.name || '-'}</td>
+                    <td><span class="tag">${k.tier}</span></td>
+                    <td>${k.today_usage}/${k.daily_limit}</td>
+                    <td><span class="${k.active ? 'status-active' : 'status-revoked'}">${k.active ? 'Active' : 'Revoked'}</span></td>
+                    <td>${k.active ? `<button onclick="revokeKey(${k.id})" style="color: var(--color-terracotta); background: none; border: none; cursor: pointer; font-weight: 600; font-size: 14px;">Revoke</button>` : '-'}</td>
                 </tr>
             `).join('');
         } catch (err) { console.error('API keys error:', err); }
     }
 
-    // Generate Key
     document.getElementById('generate-key-btn').addEventListener('click', () => document.getElementById('key-modal').classList.remove('hidden'));
     document.getElementById('cancel-key').addEventListener('click', () => document.getElementById('key-modal').classList.add('hidden'));
     document.getElementById('key-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = document.getElementById('key-name').value;
-        const email = document.getElementById('key-email').value;
-        const tier = document.getElementById('key-tier').value;
-        await fetch(`${API}/api-keys`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, tier }) });
+        await fetch(`${API}/api-keys`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: document.getElementById('key-name').value, email: document.getElementById('key-email').value, tier: document.getElementById('key-tier').value }) });
         document.getElementById('key-modal').classList.add('hidden');
         loadApiKeys();
     });
 
     async function revokeKey(id) {
-        if (confirm('Revoke this API key?')) {
-            await fetch(`${API}/api-keys/${id}`, { method: 'DELETE' });
-            loadApiKeys();
-        }
+        if (confirm('Revoke this API key?')) { await fetch(`${API}/api-keys/${id}`, { method: 'DELETE' }); loadApiKeys(); }
     }
 
-    // Load Usage
     async function loadUsage() {
         try {
             const res = await fetch(`${API}/usage`);
@@ -369,36 +337,34 @@
                 type: 'line',
                 data: {
                     labels: data.dailyUsage.map(d => d.date),
-                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), borderColor: '#14b8a6', backgroundColor: 'rgba(20,184,166,0.1)', tension: 0.4, fill: true }]
+                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), borderColor: '#1a3300', backgroundColor: 'rgba(26,51,0,0.1)', tension: 0.4, fill: true }]
                 },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
             document.getElementById('topUsersList').innerHTML = data.topUsers.map(u => `
-                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <code class="text-sm font-mono">${u.api_key}</code>
-                    <span class="font-semibold text-teal-600">${u.count} requests</span>
+                <div class="flex justify-between items-center" style="padding: var(--space-1) 0; border-bottom: 1px solid var(--color-whisper-gray);">
+                    <code class="micro">${u.api_key}</code>
+                    <span class="tag">${u.count} requests</span>
                 </div>
             `).join('');
         } catch (err) { console.error('Usage error:', err); }
     }
 
-    // Load Jobs
     async function loadJobs() {
         try {
             const res = await fetch(`${API}/jobs`);
             const data = await res.json();
             document.getElementById('jobsTable').innerHTML = data.jobs.map(j => `
-                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                    <td class="py-3 px-4"><code class="text-xs">${j.id.substring(0, 8)}...</code></td>
-                    <td class="py-3 px-4">${j.type}</td>
-                    <td class="py-3 px-4"><span class="px-3 py-1 ${j.status === 'completed' ? 'bg-green-100 text-green-700' : j.status === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'} rounded-full text-xs font-semibold">${j.status}</span></td>
-                    <td class="py-3 px-4 text-sm text-gray-500">${new Date(j.created_at).toLocaleString()}</td>
+                <tr>
+                    <td><code class="micro">${j.id.substring(0, 8)}...</code></td>
+                    <td>${j.type}</td>
+                    <td><span class="status-${j.status}">${j.status}</span></td>
+                    <td class="caption">${new Date(j.created_at).toLocaleString()}</td>
                 </tr>
             `).join('');
         } catch (err) { console.error('Jobs error:', err); }
     }
 
-    // Load Server
     async function loadServer() {
         try {
             const res = await fetch(`${API}/server`);
@@ -413,23 +379,22 @@
             document.getElementById('server-uptime').textContent = `${hours}h ${mins}m`;
             document.getElementById('server-platform').textContent = `${data.server.platform} | ${data.server.cpus} CPUs`;
             document.getElementById('serviceStatus').innerHTML = `
-                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                    <span class="font-semibold">API Server</span>
-                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">Online</span>
+                <div class="flex justify-between items-center" style="padding: var(--space-2); background: var(--color-sticky-note-mint); border-radius: var(--radius-sm); margin-bottom: var(--space-1);">
+                    <span class="body-sm" style="font-weight: 600;">API Server</span>
+                    <span class="status-active">Online</span>
                 </div>
-                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                    <span class="font-semibold">Database</span>
-                    <span class="px-3 py-1 ${data.database.connected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-full text-sm font-semibold">${data.database.connected ? 'Online' : 'Offline'}</span>
+                <div class="flex justify-between items-center" style="padding: var(--space-2); background: ${data.database.connected ? 'var(--color-sticky-note-mint)' : 'var(--color-sticky-note-blush)'}; border-radius: var(--radius-sm); margin-bottom: var(--space-1);">
+                    <span class="body-sm" style="font-weight: 600;">Database</span>
+                    <span class="${data.database.connected ? 'status-active' : 'status-failed'}">${data.database.connected ? 'Online' : 'Offline'}</span>
                 </div>
-                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                    <span class="font-semibold">Active Jobs</span>
-                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">${data.activeJobs} processing</span>
+                <div class="flex justify-between items-center" style="padding: var(--space-2); background: var(--color-highlighter-yellow); border-radius: var(--radius-sm);">
+                    <span class="body-sm" style="font-weight: 600;">Active Jobs</span>
+                    <span class="status-processing">${data.activeJobs} processing</span>
                 </div>
             `;
         } catch (err) { console.error('Server error:', err); }
     }
 
-    // Init
     checkAuth();
     </script>
 </body>

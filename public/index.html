@@ -3,866 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veo Watermark Remover - Image & Video</title>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cream: '#FAF9F6',
-                        brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                        }
-                    },
-                    fontFamily: {
-                        'display': ['Space Grotesk', 'sans-serif'],
-                        'body': ['Plus Jakarta Sans', 'sans-serif'],
-                        'serif-accent': ['Cormorant Garamond', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Claude Style CSS -->
-    <link rel="stylesheet" href="claude-style.css">
-    
-    <style>
-        body {
-            background-color: #FAF9F6;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        
-        .gradient-mesh {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
-            filter: blur(80px);
-            animation: float 20s ease-in-out infinite;
-        }
-        
-        .gradient-mesh-2 {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, transparent 70%);
-            filter: blur(80px);
-            animation: float 25s ease-in-out infinite reverse;
-        }
-        
-        .tab-button {
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .tab-button.active {
-            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
-        }
-        
-        .upload-card {
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .upload-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
-            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(20, 184, 166, 0.4);
-        }
-        
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #14b8a6 0%, #0d9488 50%, #fbbf24 100%);
-            background-size: 200% 100%;
-            animation: shimmer 2s ease infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <title>VeoTools — Remove Watermarks from Veo Videos & Images</title>
+    <meta name="description" content="Remove watermarks from Google Veo AI-generated videos and images. Fast, private, browser-based processing.">
+    <link rel="stylesheet" href="saybriefly.css">
 </head>
-<body class="antialiased">
-    <!-- Grain Overlay -->
-    <div class="grain-overlay" aria-hidden="true"></div>
-    
-    <!-- Gradient Mesh Background -->
-    <div class="gradient-mesh" style="top: -200px; left: -200px;"></div>
-    <div class="gradient-mesh-2" style="bottom: -200px; right: -200px;"></div>
-    
-    <!-- Main Container -->
-    <div class="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div class="max-w-5xl w-full">
-            <!-- Header -->
-            <div class="text-center mb-12 fade-in">
-                <h1 class="hero-title text-4xl md:text-6xl text-gray-900 mb-4">
-                    Veo <em class="heading-serif-accent heading-gradient-accent">Watermark</em> Remover
-                </h1>
-                <p class="body-premium text-lg text-gray-600 max-w-2xl mx-auto">
-                    Remove watermarks from Google Veo images and videos with precision
-                </p>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">
+            <div class="nav-logo-mark">V</div>
+            <span class="nav-logo-text">VeoTools</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#api">API</a></li>
+            <li><a href="/admin.html">Admin</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="#get-started" class="btn btn-primary">Get Started →</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero container">
+        <div class="tag">✨ Free to use — no signup required</div>
+        <h1 class="display-lg">
+            Remove <span class="highlight">watermarks</span> from your Veo creations
+        </h1>
+        <p class="body-lg">
+            Fast, private, and browser-based. Process images and videos directly in your browser — nothing gets uploaded to any server.
+        </p>
+        <div class="hero-actions">
+            <a href="/image-processor.html" class="btn btn-primary btn-lg">Process Image →</a>
+            <a href="#video" class="btn btn-outline btn-lg">Process Video</a>
+        </div>
+        <p class="hero-caption">no credit card required · 100% client-side processing</p>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section container">
+        <div class="grid-4">
+            <div class="text-center">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Client-side processing</div>
             </div>
-            
-            <!-- Main Card -->
-            <div class="bg-white rounded-[2rem] shadow-soft p-8 md:p-12 fade-in">
-                <!-- Tabs -->
-                <div class="flex gap-4 mb-10 justify-center">
-                    <button class="tab-button active px-8 py-4 rounded-2xl font-display font-semibold text-base" data-tab="image">
-                        🖼️ Image
-                        <span class="block text-xs opacity-75 mt-1">Browser-based</span>
-                    </button>
-                    <button class="tab-button px-8 py-4 rounded-2xl font-display font-semibold text-base bg-gray-100 text-gray-700" data-tab="video">
-                        🎥 Video
-                        <span class="block text-xs opacity-75 mt-1">Server-based</span>
-                    </button>
-                    <button class="tab-button px-8 py-4 rounded-2xl font-display font-semibold text-base bg-gray-100 text-gray-700" data-tab="batch">
-                        📦 Batch
-                        <span class="block text-xs opacity-75 mt-1">Multi-file</span>
-                    </button>
-                </div>
-                
-                <!-- Image Section -->
-                <div class="upload-section active" id="imageSection">
-                    <div class="text-center mb-8">
-                        <span class="badge-text inline-block px-4 py-2 bg-brand-50 text-brand-700 rounded-full">
-                            ✨ 100% Browser Processing • Fast & Private
-                        </span>
-                    </div>
-                    
-                    <div class="upload-card border-2 border-dashed border-gray-300 rounded-[2rem] p-12 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-white hover:border-brand-400" id="imageUploadArea">
-                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-brand-400 to-brand-600 rounded-3xl flex items-center justify-center text-4xl shadow-soft">
-                            🖼️
-                        </div>
-                        <h3 class="font-display font-bold text-2xl text-gray-900 mb-2">
-                            Drop your Gemini image here
-                        </h3>
-                        <p class="body-premium text-gray-600 mb-6">
-                            or click to browse files
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 rounded-full text-sm text-gray-600">
-                            <span>JPG</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>PNG</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>WebP</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>Max 20MB</span>
-                        </div>
-                    </div>
-                    <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" class="hidden">
-                    
-                    <!-- Image Progress -->
-                    <div class="progress-container hidden mt-8" id="imageProgress">
-                        <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
-                            <div class="progress-bar-fill h-full rounded-full transition-all duration-300" id="imageProgressFill" style="width: 0%"></div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <p class="font-display font-semibold text-gray-900" id="imageStatus">Processing...</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Image Error -->
-                    <div class="error hidden mt-6 p-6 bg-red-50 border border-red-200 rounded-2xl text-center" id="imageError">
-                        <p class="font-display font-semibold text-red-900" id="imageErrorMessage"></p>
-                    </div>
-                    
-                    <!-- Image Result -->
-                    <div class="result-container hidden mt-8" id="imageResult">
-                        <div class="text-center mb-6">
-                            <div class="inline-flex items-center gap-2 px-6 py-3 bg-green-50 border border-green-200 rounded-full">
-                                <span class="text-2xl">✅</span>
-                                <span class="font-display font-semibold text-green-900">Watermark Removed!</span>
-                            </div>
-                        </div>
-                        
-                        <div class="relative rounded-2xl overflow-hidden shadow-soft bg-black" id="imageComparison">
-                            <img id="originalImage" class="w-full block" alt="Original">
-                            <div class="absolute top-0 left-0 h-full w-1/2 overflow-hidden border-r-2 border-white" id="imageOverlay">
-                                <img id="processedImage" class="block h-full" style="width: 200%; max-width: none;" alt="Processed">
-                            </div>
-                            <div class="absolute top-0 bottom-0 w-1 bg-white cursor-col-resize" id="imageSlider" style="left: 50%;">
-                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center">
-                                    <span class="text-brand-600 font-bold">⟨⟩</span>
-                                </div>
-                            </div>
-                            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-gray-700">Processed</div>
-                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-gray-700">Original</div>
-                        </div>
-                        
-                        <div class="text-center mt-6">
-                            <a href="#" id="imageDownload" class="btn-primary inline-block px-10 py-4 rounded-2xl font-display font-semibold text-white text-lg" download="processed_image.png">
-                                ⬇ Download Processed Image
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Video Section -->
-                <div class="upload-section hidden" id="videoSection">
-                    <div class="text-center mb-8">
-                        <span class="badge-text inline-block px-4 py-2 bg-brand-50 text-brand-700 rounded-full">
-                            🖥️ Server Processing • High Quality
-                        </span>
-                    </div>
-                    
-                    <div class="upload-card border-2 border-dashed border-gray-300 rounded-[2rem] p-12 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-white hover:border-brand-400" id="videoUploadArea">
-                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-3xl flex items-center justify-center text-4xl shadow-soft">
-                            🎥
-                        </div>
-                        <h3 class="font-display font-bold text-2xl text-gray-900 mb-2">
-                            Drop your Veo video here
-                        </h3>
-                        <p class="body-premium text-gray-600 mb-6">
-                            or click to browse files
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 rounded-full text-sm text-gray-600">
-                            <span>MP4</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>MOV</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>MKV</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>AVI</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>Max 500MB</span>
-                        </div>
-                    </div>
-                    <input type="file" id="videoInput" accept="video/*" class="hidden">
-                    
-                    <!-- Progress -->
-                    <div class="progress-container hidden mt-8" id="videoProgress">
-                        <div class="bg-gray-100 rounded-full h-3 overflow-hidden">
-                            <div class="progress-bar-fill h-full rounded-full transition-all duration-300" id="videoProgressFill" style="width: 0%"></div>
-                        </div>
-                        <div class="text-center mt-4">
-                            <p class="font-display font-semibold text-gray-900" id="videoStatus">Uploading...</p>
-                            <p class="text-sm text-gray-500 mt-1" id="videoProgressText">0%</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Error -->
-                    <div class="error hidden mt-6 p-6 bg-red-50 border border-red-200 rounded-2xl text-center" id="videoError">
-                        <p class="font-display font-semibold text-red-900" id="videoErrorMessage"></p>
-                    </div>
-                    
-                    <!-- Result -->
-                    <div class="result-container hidden mt-8" id="videoResult">
-                        <div class="text-center mb-6">
-                            <div class="inline-flex items-center gap-2 px-6 py-3 bg-green-50 border border-green-200 rounded-full">
-                                <span class="text-2xl">✅</span>
-                                <span class="font-display font-semibold text-green-900">Processing Complete!</span>
-                            </div>
-                        </div>
-                        
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-soft-sm">
-                                <h4 class="font-display font-bold text-lg text-gray-900 mb-4 text-center">Original</h4>
-                                <video id="originalVideo" controls class="w-full rounded-xl bg-black"></video>
-                            </div>
-                            <div class="bg-gradient-to-br from-brand-50 to-white rounded-2xl p-6 shadow-soft-sm">
-                                <h4 class="font-display font-bold text-lg text-gray-900 mb-4 text-center">Processed</h4>
-                                <video id="processedVideo" controls class="w-full rounded-xl bg-black"></video>
-                                <a href="#" id="videoDownload" class="btn-primary block text-center mt-4 px-6 py-3 rounded-xl font-display font-semibold text-white">
-                                    ⬇ Download Video
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Batch Section -->
-                <div class="upload-section hidden" id="batchSection">
-                    <div class="text-center mb-8">
-                        <span class="badge-text inline-block px-4 py-2 bg-brand-50 text-brand-700 rounded-full">
-                            📦 Process Multiple Videos • Download as ZIP
-                        </span>
-                    </div>
-                    
-                    <div class="upload-card border-2 border-dashed border-gray-300 rounded-[2rem] p-12 text-center cursor-pointer bg-gradient-to-br from-gray-50 to-white hover:border-brand-400" id="batchUploadArea">
-                        <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-3xl flex items-center justify-center text-4xl shadow-soft">
-                            📦
-                        </div>
-                        <h3 class="font-display font-bold text-2xl text-gray-900 mb-2">
-                            Drop multiple videos here
-                        </h3>
-                        <p class="body-premium text-gray-600 mb-6">
-                            Process up to 10 videos at once
-                        </p>
-                        <div class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 rounded-full text-sm text-gray-600">
-                            <span>Max 10 files</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>500MB each</span>
-                            <span class="w-1 h-1 bg-gray-400 rounded-full"></span>
-                            <span>ZIP download</span>
-                        </div>
-                    </div>
-                    <input type="file" id="batchInput" accept="video/*" multiple class="hidden">
-                    
-                    <!-- Batch Progress -->
-                    <div class="batch-progress hidden mt-8" id="batchProgress">
-                        <div class="bg-white rounded-2xl p-6 shadow-soft-sm">
-                            <div class="flex items-center justify-between mb-4">
-                                <h4 class="font-display font-bold text-lg text-gray-900">Processing Queue</h4>
-                                <span class="badge-text px-3 py-1 bg-brand-50 text-brand-700 rounded-full" id="batchStatusBadge">0/0</span>
-                            </div>
-                            <div class="bg-gray-100 rounded-full h-3 overflow-hidden mb-4">
-                                <div class="progress-bar-fill h-full rounded-full transition-all duration-300" id="batchProgressFill" style="width: 0%"></div>
-                            </div>
-                            <div class="space-y-3" id="batchJobList">
-                                <!-- Job items will be inserted here -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Batch Result -->
-                    <div class="batch-result hidden mt-8" id="batchResult">
-                        <div class="bg-gradient-to-br from-green-50 to-white rounded-2xl p-8 shadow-soft-sm text-center">
-                            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-green-400 to-green-600 rounded-3xl flex items-center justify-center text-4xl">
-                                ✅
-                            </div>
-                            <h4 class="font-display font-bold text-2xl text-gray-900 mb-2">Batch Complete!</h4>
-                            <p class="body-premium text-gray-600 mb-6" id="batchResultText">All videos processed successfully</p>
-                            <a href="#" id="batchDownload" class="btn-primary inline-block px-10 py-4 rounded-2xl font-display font-semibold text-white text-lg">
-                                ⬇ Download All as ZIP
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Batch Error -->
-                    <div class="error hidden mt-6 p-6 bg-red-50 border border-red-200 rounded-2xl text-center" id="batchError">
-                        <p class="font-display font-semibold text-red-900" id="batchErrorMessage"></p>
-                    </div>
-                </div>
+            <div class="text-center">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Files uploaded to servers</div>
             </div>
-            
-            <!-- Footer -->
-            <div class="text-center mt-8 text-sm text-gray-500">
-                <p>Powered by <a href="https://github.com/GargantuaX/gemini-watermark-remover" target="_blank" class="text-brand-600 hover:text-brand-700 font-semibold">GargantuaX</a> & <a href="https://github.com/allenk/VeoWatermarkRemover" target="_blank" class="text-brand-600 hover:text-brand-700 font-semibold">VeoWatermarkRemover</a></p>
+            <div class="text-center">
+                <div class="stat-number">&lt;5s</div>
+                <div class="stat-label">Average processing time</div>
+            </div>
+            <div class="text-center">
+                <div class="stat-number">Free</div>
+                <div class="stat-label">For personal use</div>
             </div>
         </div>
-    </div>
-    
-    <script type="module">
-        // Tab switching
-        const tabs = document.querySelectorAll('.tab-button');
-        const sections = document.querySelectorAll('.upload-section');
-        
-        tabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const targetTab = tab.dataset.tab;
-                
-                tabs.forEach(t => {
-                    t.classList.remove('active');
-                    t.classList.add('bg-gray-100', 'text-gray-700');
-                });
-                tab.classList.add('active');
-                tab.classList.remove('bg-gray-100', 'text-gray-700');
-                
-                sections.forEach(section => {
-                    section.classList.add('hidden');
-                    section.classList.remove('active');
-                    if (section.id === `${targetTab}Section`) {
-                        section.classList.remove('hidden');
-                        section.classList.add('active', 'fade-in');
-                    }
-                });
-            });
-        });
-        
-        // Image processing with GargantuaX library
-        const imageUploadArea = document.getElementById('imageUploadArea');
-        const imageInput = document.getElementById('imageInput');
-        const imageProgress = document.getElementById('imageProgress');
-        const imageProgressFill = document.getElementById('imageProgressFill');
-        const imageStatus = document.getElementById('imageStatus');
-        const imageResult = document.getElementById('imageResult');
-        const imageError = document.getElementById('imageError');
-        const imageErrorMessage = document.getElementById('imageErrorMessage');
-        const imageSlider = document.getElementById('imageSlider');
-        const imageOverlay = document.getElementById('imageOverlay');
-        
-        let watermarkEngine = null;
-        
-        // Initialize watermark engine
-        async function initWatermarkEngine() {
-            if (watermarkEngine) return watermarkEngine;
-            
-            try {
-                const { WatermarkEngine } = await import('./core/watermarkEngine.js');
-                watermarkEngine = await WatermarkEngine.create();
-                console.log('Watermark engine initialized');
-                return watermarkEngine;
-            } catch (error) {
-                console.error('Failed to initialize watermark engine:', error);
-                throw error;
-            }
-        }
-        
-        imageUploadArea.addEventListener('click', () => imageInput.click());
-        
-        imageUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.add('border-brand-400', 'bg-brand-50');
-        });
-        
-        imageUploadArea.addEventListener('dragleave', () => {
-            imageUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-        });
-        
-        imageUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            imageUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleImageFile(files[0]);
-            }
-        });
-        
-        imageInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleImageFile(e.target.files[0]);
-            }
-        });
-        
-        async function handleImageFile(file) {
-            if (file.size > 20 * 1024 * 1024) {
-                showImageError('Image too large! Maximum size is 20MB');
-                return;
-            }
-            
-            imageProgress.classList.remove('hidden');
-            imageResult.classList.add('hidden');
-            imageError.classList.add('hidden');
-            imageStatus.textContent = 'Loading image...';
-            imageProgressFill.style.width = '20%';
-            
-            try {
-                // Create object URL for original image
-                const originalUrl = URL.createObjectURL(file);
-                document.getElementById('originalImage').src = originalUrl;
-                
-                // Load image
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                
-                await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = reject;
-                    img.src = originalUrl;
-                });
-                
-                imageStatus.textContent = 'Initializing watermark engine...';
-                imageProgressFill.style.width = '40%';
-                
-                // Initialize engine
-                const engine = await initWatermarkEngine();
-                
-                imageStatus.textContent = 'Removing watermark...';
-                imageProgressFill.style.width = '60%';
-                
-                // Process image using GargantuaX engine
-                const canvas = await engine.removeWatermarkFromImage(img, {
-                    adaptiveMode: 'auto'
-                });
-                const meta = canvas.__watermarkMeta;
-                
-                console.log('Watermark removal meta:', meta);
-                
-                imageStatus.textContent = 'Finalizing...';
-                imageProgressFill.style.width = '90%';
-                
-                // Convert canvas to blob
-                // Handle both OffscreenCanvas and regular Canvas
-                let blob;
-                if (canvas.convertToBlob) {
-                    // OffscreenCanvas
-                    blob = await canvas.convertToBlob({ type: 'image/png' });
-                } else if (canvas.toBlob) {
-                    // Regular Canvas
-                    blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                } else {
-                    throw new Error('Canvas does not support blob conversion');
-                }
-                
-                const processedUrl = URL.createObjectURL(blob);
-                document.getElementById('processedImage').src = processedUrl;
-                document.getElementById('imageDownload').href = processedUrl;
-                
-                imageProgressFill.style.width = '100%';
-                imageStatus.textContent = 'Processing complete!';
-                
-                setTimeout(() => {
-                    imageProgress.classList.add('hidden');
-                    imageResult.classList.remove('hidden');
-                    imageResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }, 500);
-                
-            } catch (error) {
-                console.error('Image processing error:', error);
-                showImageError('Processing failed: ' + (error.message || 'Unknown error'));
-            }
-        }
-        
-        // Slider functionality
-        let isDragging = false;
-        
-        imageSlider.addEventListener('mousedown', () => {
-            isDragging = true;
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            const comparison = document.getElementById('imageComparison');
-            const rect = comparison.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-            
-            imageSlider.style.left = `${percentage}%`;
-            imageOverlay.style.width = `${percentage}%`;
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-        
-        function showImageError(message) {
-            imageErrorMessage.textContent = message;
-            imageError.classList.remove('hidden');
-            imageProgress.classList.add('hidden');
-        }
-        
-        // Video processing
-        const videoUploadArea = document.getElementById('videoUploadArea');
-        const videoInput = document.getElementById('videoInput');
-        const videoProgress = document.getElementById('videoProgress');
-        const videoProgressFill = document.getElementById('videoProgressFill');
-        const videoStatus = document.getElementById('videoStatus');
-        const videoProgressText = document.getElementById('videoProgressText');
-        const videoResult = document.getElementById('videoResult');
-        const videoError = document.getElementById('videoError');
-        const videoErrorMessage = document.getElementById('videoErrorMessage');
-        
-        videoUploadArea.addEventListener('click', () => videoInput.click());
-        
-        videoUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            videoUploadArea.classList.add('border-brand-400', 'bg-brand-50');
-        });
-        
-        videoUploadArea.addEventListener('dragleave', () => {
-            videoUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-        });
-        
-        videoUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            videoUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleVideoFile(files[0]);
-            }
-        });
-        
-        videoInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleVideoFile(e.target.files[0]);
-            }
-        });
-        
-        function handleVideoFile(file) {
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section container">
+        <div class="text-center mb-4">
+            <div class="tag">Features</div>
+            <h2 class="heading-lg mt-2">Everything you need</h2>
+            <p class="body mt-2" style="max-width: 600px; margin-left: auto; margin-right: auto;">
+                Simple, fast, and private watermark removal for your AI-generated content.
+            </p>
+        </div>
+        <div class="grid-3 mt-4">
+            <div class="card-mint">
+                <h3 class="heading-sm">📸 Image Processing</h3>
+                <p class="body-sm mt-2">
+                    Remove watermarks from Gemini/Veo images instantly. 100% client-side using advanced reverse alpha blending.
+                </p>
+                <a href="/image-processor.html" class="btn btn-mint mt-3">Try Image Tool →</a>
+            </div>
+            <div class="card-yellow">
+                <h3 class="heading-sm">🎥 Video Processing</h3>
+                <p class="body-sm mt-2">
+                    Server-side video watermark removal with high-quality output. Supports MP4, MOV, MKV up to 500MB.
+                </p>
+                <a href="#video" class="btn btn-primary mt-3">Try Video Tool →</a>
+            </div>
+            <div class="card-teal">
+                <h3 class="heading-sm">📦 Batch Processing</h3>
+                <p class="body-sm mt-2">
+                    Process up to 10 videos at once. Download all results as a single ZIP file when complete.
+                </p>
+                <a href="#batch" class="btn btn-teal mt-3">Try Batch Tool →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Processing Section -->
+    <section id="image" class="section container">
+        <div class="grid-2" style="align-items: center;">
+            <div>
+                <div class="tag">Image Processing</div>
+                <h2 class="heading-lg mt-2">Remove watermarks from <span class="highlight">images</span></h2>
+                <p class="body mt-3">
+                    Our browser-based tool uses mathematical reverse alpha blending to precisely remove watermarks from Gemini and Veo AI-generated images. No AI hallucination — just pure math.
+                </p>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">✅ 100% client-side — nothing uploaded</li>
+                    <li class="body-sm mb-1">✅ Supports JPG, PNG, WebP up to 20MB</li>
+                    <li class="body-sm mb-1">✅ Before/after comparison slider</li>
+                    <li class="body-sm mb-1">✅ Works in all modern browsers</li>
+                </ul>
+                <a href="/image-processor.html" class="btn btn-primary btn-lg mt-4">Open Image Processor →</a>
+            </div>
+            <div class="card-mint" style="padding: var(--space-6);">
+                <div class="text-center">
+                    <div style="font-size: 80px;">🖼️</div>
+                    <p class="body-sm mt-3" style="opacity: 0.7;">Drag & drop your image to get started</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Processing Section -->
+    <section id="video" class="section container">
+        <div class="grid-2" style="align-items: center;">
+            <div class="card-yellow" style="padding: var(--space-6);">
+                <div class="text-center">
+                    <div style="font-size: 80px;">🎬</div>
+                    <p class="body-sm mt-3" style="opacity: 0.7;">Upload your video to process</p>
+                </div>
+            </div>
+            <div>
+                <div class="tag">Video Processing</div>
+                <h2 class="heading-lg mt-2">Clean up your <span class="highlight">videos</span></h2>
+                <p class="body mt-3">
+                    Server-side video processing using the VeoWatermarkRemover CLI tool. High-quality output with audio preserved.
+                </p>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">✅ Supports MP4, MOV, MKV, AVI</li>
+                    <li class="body-sm mb-1">✅ Up to 500MB file size</li>
+                    <li class="body-sm mb-1">✅ Audio preserved</li>
+                    <li class="body-sm mb-1">✅ Side-by-side comparison</li>
+                </ul>
+                <div class="mt-4">
+                    <input type="file" id="video-upload" accept="video/*" style="display: none;">
+                    <button onclick="document.getElementById('video-upload').click()" class="btn btn-primary btn-lg">Upload Video →</button>
+                </div>
+            </div>
+        </div>
+        <div id="video-result" class="mt-4 hidden"></div>
+    </section>
+
+    <!-- Batch Processing Section -->
+    <section id="batch" class="section container">
+        <div class="text-center">
+            <div class="tag">Batch Processing</div>
+            <h2 class="heading-lg mt-2">Process <span class="highlight">multiple</span> videos at once</h2>
+            <p class="body mt-3" style="max-width: 600px; margin: 0 auto;">
+                Upload up to 10 videos and process them all in sequence. Download everything as a single ZIP when done.
+            </p>
+        </div>
+        <div class="card mt-4" style="max-width: 800px; margin: 0 auto;">
+            <div class="text-center" style="padding: var(--space-6);">
+                <div style="font-size: 60px;">📦</div>
+                <p class="body mt-3">Drag & drop up to 10 videos here</p>
+                <input type="file" id="batch-upload" accept="video/*" multiple style="display: none;">
+                <button onclick="document.getElementById('batch-upload').click()" class="btn btn-teal btn-lg mt-3">Select Videos →</button>
+            </div>
+        </div>
+        <div id="batch-result" class="mt-4 hidden"></div>
+    </section>
+
+    <!-- API Section -->
+    <section id="api" class="section container">
+        <div class="text-center">
+            <div class="tag">API Access</div>
+            <h2 class="heading-lg mt-2">Integrate into your <span class="highlight">workflow</span></h2>
+            <p class="body mt-3" style="max-width: 600px; margin: 0 auto;">
+                Use our REST API to automate watermark removal. Perfect for developers and power users.
+            </p>
+        </div>
+        <div class="grid-2 mt-4" style="max-width: 900px; margin: 0 auto;">
+            <div class="card">
+                <h3 class="heading-sm">Free Tier</h3>
+                <div class="stat-number mt-2">100</div>
+                <div class="stat-label">requests per day</div>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">✅ Image & video processing</li>
+                    <li class="body-sm mb-1">✅ Async job tracking</li>
+                    <li class="body-sm mb-1">✅ Download processed files</li>
+                </ul>
+                <code class="micro" style="display: block; margin-top: var(--space-2); padding: var(--space-1); background: var(--color-whisper-gray); border-radius: var(--radius-sm);">demo-key-12345</code>
+            </div>
+            <div class="card-yellow">
+                <h3 class="heading-sm">Pro Tier</h3>
+                <div class="stat-number mt-2">1000</div>
+                <div class="stat-label">requests per day</div>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">✅ Everything in Free</li>
+                    <li class="body-sm mb-1">✅ Priority processing</li>
+                    <li class="body-sm mb-1">✅ Higher rate limits</li>
+                </ul>
+                <code class="micro" style="display: block; margin-top: var(--space-2); padding: var(--space-1); background: var(--color-cream-paper); border-radius: var(--radius-sm);">test-key-67890</code>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <a href="/api-docs.html" class="btn btn-outline">View API Docs →</a>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="section container">
+        <div class="text-center">
+            <div class="tag">Pricing</div>
+            <h2 class="heading-lg mt-2">Simple, transparent pricing</h2>
+        </div>
+        <div class="grid-3 mt-4" style="max-width: 1000px; margin: 0 auto;">
+            <div class="card">
+                <h3 class="heading-sm">Free</h3>
+                <div class="stat-number mt-2">RM0</div>
+                <div class="stat-label">forever</div>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">5 images/day</li>
+                    <li class="body-sm mb-1">1 video/day</li>
+                    <li class="body-sm mb-1">Browser processing</li>
+                </ul>
+                <a href="#get-started" class="btn btn-outline mt-3" style="width: 100%; justify-content: center;">Get Started</a>
+            </div>
+            <div class="card-mint">
+                <h3 class="heading-sm">Basic</h3>
+                <div class="stat-number mt-2">RM29</div>
+                <div class="stat-label">per month</div>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">100 images/day</li>
+                    <li class="body-sm mb-1">10 videos/day</li>
+                    <li class="body-sm mb-1">API access</li>
+                </ul>
+                <a href="#get-started" class="btn btn-mint mt-3" style="width: 100%; justify-content: center;">Subscribe →</a>
+            </div>
+            <div class="card-yellow">
+                <h3 class="heading-sm">Pro</h3>
+                <div class="stat-number mt-2">RM79</div>
+                <div class="stat-label">per month</div>
+                <ul class="mt-3" style="list-style: none; padding: 0;">
+                    <li class="body-sm mb-1">500 images/day</li>
+                    <li class="body-sm mb-1">50 videos/day</li>
+                    <li class="body-sm mb-1">Priority support</li>
+                </ul>
+                <a href="#get-started" class="btn btn-primary mt-3" style="width: 100%; justify-content: center;">Subscribe →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-text">© 2026 VeoTools. All rights reserved.</div>
+            <div class="footer-text">
+                <a href="/admin.html" style="color: var(--color-pencil-gray); text-decoration: none;">Admin</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Video upload handler
+        document.getElementById('video-upload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const resultDiv = document.getElementById('video-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<div class="card"><p class="body">⏳ Processing your video... This may take 2-5 minutes.</p></div>';
+
             const formData = new FormData();
             formData.append('video', file);
-            
-            videoProgress.classList.remove('hidden');
-            videoResult.classList.add('hidden');
-            videoError.classList.add('hidden');
-            videoStatus.textContent = 'Uploading...';
-            videoProgressText.textContent = '0%';
-            
-            const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percent = Math.round((e.loaded / e.total) * 50);
-                    videoProgressFill.style.width = percent + '%';
-                    videoProgressText.textContent = percent + '%';
-                }
-            });
-            
-            xhr.addEventListener('load', () => {
-                if (xhr.status === 200) {
-                    videoProgressFill.style.width = '100%';
-                    videoProgressText.textContent = '100%';
-                    videoStatus.textContent = 'Processing complete!';
-                    
-                    const response = JSON.parse(xhr.responseText);
-                    showVideoResult(response);
+
+            try {
+                const res = await fetch('/upload-video', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="card-mint">
+                            <h3 class="heading-sm">✅ Video Processed!</h3>
+                            <div class="grid-2 mt-3">
+                                <div>
+                                    <p class="caption">Original</p>
+                                    <video src="${data.original}" controls style="width: 100%; border-radius: var(--radius-md); margin-top: var(--space-1);"></video>
+                                </div>
+                                <div>
+                                    <p class="caption">Processed</p>
+                                    <video src="${data.processed}" controls style="width: 100%; border-radius: var(--radius-md); margin-top: var(--space-1);"></video>
+                                </div>
+                            </div>
+                            <a href="${data.processed}" download class="btn btn-primary mt-3">Download Processed Video →</a>
+                        </div>
+                    `;
                 } else {
-                    const response = JSON.parse(xhr.responseText);
-                    showError(response.error || 'Processing failed');
+                    resultDiv.innerHTML = `<div class="card" style="border-color: var(--color-terracotta);"><p class="body">❌ Error: ${data.error}</p></div>`;
                 }
-            });
-            
-            xhr.addEventListener('error', () => {
-                showError('Upload failed. Please try again.');
-            });
-            
-            xhr.open('POST', '/upload-video');
-            xhr.send(formData);
-            
-            setTimeout(() => {
-                if (videoProgressFill.style.width === '50%') {
-                    videoStatus.textContent = 'Removing watermark on server...';
-                    let progress = 50;
-                    const interval = setInterval(() => {
-                        progress += Math.random() * 10;
-                        if (progress >= 95) {
-                            progress = 95;
-                            clearInterval(interval);
-                        }
-                        videoProgressFill.style.width = progress + '%';
-                        videoProgressText.textContent = Math.round(progress) + '%';
-                    }, 1000);
-                }
-            }, 1000);
-        }
-        
-        function showVideoResult(response) {
-            videoResult.classList.remove('hidden');
-            document.getElementById('originalVideo').src = response.original;
-            document.getElementById('processedVideo').src = response.processed;
-            document.getElementById('videoDownload').href = response.processed;
-            document.getElementById('videoDownload').download = response.filename.replace(/\.[^/.]+$/, '') + '_processed.mp4';
-            
-            videoResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function showError(message) {
-            videoErrorMessage.textContent = message;
-            videoError.classList.remove('hidden');
-            videoProgress.classList.add('hidden');
-        }
-        
-        // Batch processing
-        const batchUploadArea = document.getElementById('batchUploadArea');
-        const batchInput = document.getElementById('batchInput');
-        const batchProgress = document.getElementById('batchProgress');
-        const batchProgressFill = document.getElementById('batchProgressFill');
-        const batchStatusBadge = document.getElementById('batchStatusBadge');
-        const batchJobList = document.getElementById('batchJobList');
-        const batchResult = document.getElementById('batchResult');
-        const batchResultText = document.getElementById('batchResultText');
-        const batchDownload = document.getElementById('batchDownload');
-        const batchError = document.getElementById('batchError');
-        const batchErrorMessage = document.getElementById('batchErrorMessage');
-        
-        batchUploadArea.addEventListener('click', () => batchInput.click());
-        
-        batchUploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            batchUploadArea.classList.add('border-brand-400', 'bg-brand-50');
-        });
-        
-        batchUploadArea.addEventListener('dragleave', () => {
-            batchUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-        });
-        
-        batchUploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            batchUploadArea.classList.remove('border-brand-400', 'bg-brand-50');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleBatchFiles(files);
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="card" style="border-color: var(--color-terracotta);"><p class="body">❌ Error: ${err.message}</p></div>`;
             }
         });
-        
-        batchInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleBatchFiles(e.target.files);
-            }
-        });
-        
-        function handleBatchFiles(files) {
-            if (files.length > 10) {
-                showBatchError('Maximum 10 files allowed per batch');
-                return;
-            }
-            
+
+        // Batch upload handler
+        document.getElementById('batch-upload').addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            const resultDiv = document.getElementById('batch-result');
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<div class="card"><p class="body">⏳ Processing ' + files.length + ' videos... This may take a while.</p></div>';
+
             const formData = new FormData();
-            for (let i = 0; i < files.length; i++) {
-                formData.append('videos', files[i]);
-            }
-            
-            batchProgress.classList.remove('hidden');
-            batchResult.classList.add('hidden');
-            batchError.classList.add('hidden');
-            batchJobList.innerHTML = '';
-            batchStatusBadge.textContent = `0/${files.length}`;
-            
-            // Create job items
-            for (let i = 0; i < files.length; i++) {
-                const jobItem = document.createElement('div');
-                jobItem.className = 'flex items-center gap-3 p-3 bg-gray-50 rounded-xl';
-                jobItem.id = `batch-job-${i}`;
-                jobItem.innerHTML = `
-                    <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold">
-                        ${i + 1}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="font-display font-semibold text-gray-900 truncate">${files[i].name}</p>
-                        <p class="text-sm text-gray-500">${(files[i].size / 1024 / 1024).toFixed(1)} MB</p>
-                    </div>
-                    <div class="batch-job-status">
-                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">
-                            <span class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
-                            Waiting
-                        </span>
-                    </div>
-                `;
-                batchJobList.appendChild(jobItem);
-            }
-            
-            const xhr = new XMLHttpRequest();
-            
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable) {
-                    const percent = Math.round((e.loaded / e.total) * 30);
-                    batchProgressFill.style.width = percent + '%';
-                }
-            });
-            
-            xhr.addEventListener('load', () => {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    batchProgressFill.style.width = '30%';
-                    pollBatchStatus(response.batchId, files.length);
-                } else {
-                    const response = JSON.parse(xhr.responseText);
-                    showBatchError(response.error || 'Batch upload failed');
-                }
-            });
-            
-            xhr.addEventListener('error', () => {
-                showBatchError('Upload failed. Please try again.');
-            });
-            
-            xhr.open('POST', '/upload-batch');
-            xhr.send(formData);
-        }
-        
-        function pollBatchStatus(batchId, totalFiles) {
-            const pollInterval = setInterval(() => {
-                fetch(`/batch-status/${batchId}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        const completed = data.jobs.filter(j => j.status === 'completed').length;
-                        const failed = data.jobs.filter(j => j.status === 'failed').length;
-                        const progress = 30 + ((completed + failed) / totalFiles) * 70;
-                        
-                        batchProgressFill.style.width = progress + '%';
-                        batchStatusBadge.textContent = `${completed}/${totalFiles}`;
-                        
-                        // Update job statuses
-                        data.jobs.forEach((job, index) => {
-                            const jobElement = document.getElementById(`batch-job-${index}`);
-                            if (jobElement) {
-                                const statusDiv = jobElement.querySelector('.batch-job-status');
-                                if (job.status === 'completed') {
-                                    statusDiv.innerHTML = `
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                                            ✅ Done
-                                        </span>
-                                    `;
-                                } else if (job.status === 'failed') {
-                                    statusDiv.innerHTML = `
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-semibold">
-                                            ❌ Failed
-                                        </span>
-                                    `;
-                                } else if (job.status === 'processing') {
-                                    statusDiv.innerHTML = `
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
-                                            <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                                            Processing
-                                        </span>
-                                    `;
-                                }
-                            }
-                        });
-                        
-                        if (data.status === 'completed') {
+            files.forEach(file => formData.append('videos', file));
+
+            try {
+                const res = await fetch('/upload-batch', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <div class="card-mint">
+                            <h3 class="heading-sm">📦 Batch Started!</h3>
+                            <p class="body-sm mt-2">Processing ${data.totalFiles} videos...</p>
+                            <p class="body-sm mt-1">Status: <a href="${data.statusUrl}" target="_blank" style="color: var(--color-forest-ink);">Check Status →</a></p>
+                        </div>
+                    `;
+
+                    // Poll for completion
+                    const pollInterval = setInterval(async () => {
+                        const statusRes = await fetch(data.statusUrl);
+                        const status = await statusRes.json();
+                        if (status.status === 'completed') {
                             clearInterval(pollInterval);
-                            showBatchResult(data);
+                            resultDiv.innerHTML += `
+                                <div class="card-yellow mt-3">
+                                    <h3 class="heading-sm">✅ Batch Complete!</h3>
+                                    <a href="${status.zipUrl}" download class="btn btn-primary mt-2">Download All as ZIP →</a>
+                                </div>
+                            `;
                         }
-                    })
-                    .catch(err => {
-                        console.error('Poll error:', err);
-                    });
-            }, 2000);
-        }
-        
-        function showBatchResult(data) {
-            batchProgress.classList.add('hidden');
-            batchResult.classList.remove('hidden');
-            
-            const completed = data.jobs.filter(j => j.status === 'completed').length;
-            const failed = data.jobs.filter(j => j.status === 'failed').length;
-            
-            batchResultText.textContent = `${completed} videos processed successfully${failed > 0 ? `, ${failed} failed` : ''}`;
-            
-            if (data.zipUrl) {
-                batchDownload.href = data.zipUrl;
-                batchDownload.download = `batch-${data.id}.zip`;
+                    }, 5000);
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<div class="card" style="border-color: var(--color-terracotta);"><p class="body">❌ Error: ${err.message}</p></div>`;
             }
-            
-            batchResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        
-        function showBatchError(message) {
-            batchErrorMessage.textContent = message;
-            batchError.classList.remove('hidden');
-            batchProgress.classList.add('hidden');
-        }
+        });
     </script>
 </body>
 </html>
