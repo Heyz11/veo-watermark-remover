@@ -19,303 +19,142 @@
     </style>
 </head>
 <body class="antialiased">
-    <div class="flex h-screen overflow-hidden">
+
+    <!-- Login Page -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="font-display text-3xl font-bold text-gray-900">Veo <span class="text-teal-500">Admin</span></h1>
+                <p class="text-gray-500 mt-2">Sign in to your admin panel</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                    <input type="text" id="login-username" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="admin">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Enter password">
+                </div>
+                <div id="login-error" class="hidden text-red-500 text-sm font-semibold"></div>
+                <button type="submit" class="w-full px-6 py-3 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel (hidden until authenticated) -->
+    <div id="admin-panel" class="hidden flex h-screen overflow-hidden">
         <!-- Sidebar -->
         <div class="sidebar w-64 bg-white border-r border-gray-200 flex flex-col">
-            <!-- Logo -->
             <div class="p-6 border-b border-gray-200">
-                <h1 class="font-display text-2xl font-bold text-gray-900">
-                    Veo <span class="text-brand-500">Admin</span>
-                </h1>
+                <h1 class="font-display text-2xl font-bold text-gray-900">Veo <span class="text-teal-500">Admin</span></h1>
                 <p class="text-xs text-gray-500 mt-1">Management Panel</p>
             </div>
-
-            <!-- Menu -->
             <nav class="flex-1 p-4 space-y-2">
-                <a href="#" class="menu-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="dashboard">
-                    <span>📊</span> Dashboard
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="users">
-                    <span>👥</span> Users
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="api-keys">
-                    <span>🔑</span> API Keys
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="usage">
-                    <span>📈</span> Usage Stats
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="revenue">
-                    <span>💰</span> Revenue
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="server">
-                    <span>🖥️</span> Server
-                </a>
-                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="settings">
-                    <span>⚙️</span> Settings
-                </a>
+                <a href="#" class="menu-item active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" data-section="dashboard"><span>📊</span> Dashboard</a>
+                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="users"><span>🔑</span> API Keys</a>
+                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="usage"><span>📈</span> Usage Stats</a>
+                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="jobs"><span>📋</span> Jobs</a>
+                <a href="#" class="menu-item flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-700" data-section="server"><span>🖥️</span> Server</a>
             </nav>
-
-            <!-- User Info -->
             <div class="p-4 border-t border-gray-200">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-bold">
-                        A
-                    </div>
-                    <div class="flex-1">
-                        <p class="font-semibold text-gray-900 text-sm">Admin</p>
-                        <p class="text-xs text-gray-500">admin@veo.com</p>
-                    </div>
-                </div>
+                <button id="logout-btn" class="w-full px-4 py-2 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition">Logout</button>
             </div>
         </div>
 
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-white border-b border-gray-200 px-8 py-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="font-display text-2xl font-bold text-gray-900" id="pageTitle">Dashboard</h2>
-                        <p class="text-sm text-gray-500" id="pageSubtitle">Overview of your watermark removal service</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <button class="px-4 py-2 bg-brand-500 text-white rounded-xl font-semibold hover:bg-brand-600 transition">
-                            + Add User
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-xl transition">
-                            🔔
-                        </button>
-                    </div>
-                </div>
+                <h2 class="font-display text-2xl font-bold text-gray-900" id="pageTitle">Dashboard</h2>
+                <p class="text-sm text-gray-500" id="pageSubtitle">Overview of your watermark removal service</p>
             </header>
 
-            <!-- Content Area -->
-            <main class="flex-1 overflow-y-auto p-8 bg-cream">
+            <main class="flex-1 overflow-y-auto p-8">
                 <!-- Dashboard Section -->
                 <div id="dashboard-section" class="section">
-                    <!-- Stats Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow-soft">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-3xl">👥</span>
-                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
-                            </div>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1">Total Users</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900">1,234</p>
-                            <p class="text-xs text-gray-500 mt-2">+45 this week</p>
+                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                            <span class="text-3xl">🔑</span>
+                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Active API Keys</h3>
+                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-api-keys">-</p>
                         </div>
-
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow-soft">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-3xl">🔑</span>
-                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+8%</span>
-                            </div>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1">Active API Keys</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900">856</p>
-                            <p class="text-xs text-gray-500 mt-2">+23 this week</p>
+                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                            <span class="text-3xl">📸</span>
+                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Today's Usage</h3>
+                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-today">-</p>
                         </div>
-
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow-soft">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-3xl">📸</span>
-                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+25%</span>
-                            </div>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1">Images Processed</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900">45.2K</p>
-                            <p class="text-xs text-gray-500 mt-2">Today: 1,234</p>
+                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                            <span class="text-3xl">📊</span>
+                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Total Requests</h3>
+                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-total">-</p>
                         </div>
-
-                        <div class="stat-card bg-white rounded-2xl p-6 shadow-soft">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-3xl">💰</span>
-                                <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">+18%</span>
-                            </div>
-                            <h3 class="text-gray-500 text-sm font-semibold mb-1">Revenue (Month)</h3>
-                            <p class="font-display text-3xl font-bold text-gray-900">RM12.5K</p>
-                            <p class="text-xs text-gray-500 mt-2">+RM2.1K vs last month</p>
+                        <div class="stat-card bg-white rounded-2xl p-6 shadow">
+                            <span class="text-3xl">⚡</span>
+                            <h3 class="text-gray-500 text-sm font-semibold mb-1 mt-4">Active Jobs</h3>
+                            <p class="font-display text-3xl font-bold text-gray-900" id="stat-jobs">-</p>
                         </div>
                     </div>
-
-                    <!-- Charts -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Usage Overview</h3>
-                            <canvas id="usageChart"></canvas>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Revenue Trend</h3>
-                            <canvas id="revenueChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="bg-white rounded-2xl p-6 shadow-soft">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Recent Activity</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">✅</div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900">New user registered</p>
-                                    <p class="text-sm text-gray-500">user_12345 joined Free tier</p>
-                                </div>
-                                <span class="text-xs text-gray-500">2 min ago</span>
-                            </div>
-
-                            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">💎</div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900">User upgraded to Pro</p>
-                                    <p class="text-sm text-gray-500">user_67890 → Pro tier (RM79/mo)</p>
-                                </div>
-                                <span class="text-xs text-gray-500">15 min ago</span>
-                            </div>
-
-                            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl">
-                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">📸</div>
-                                <div class="flex-1">
-                                    <p class="font-semibold text-gray-900">API usage spike</p>
-                                    <p class="text-sm text-gray-500">500 images processed in last hour</p>
-                                </div>
-                                <span class="text-xs text-gray-500">1 hour ago</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Users Section -->
-                <div id="users-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow-soft">
-                        <div class="flex items-center justify-between mb-6">
-                            <h3 class="font-display text-xl font-bold text-gray-900">All Users</h3>
-                            <input type="text" placeholder="Search users..." class="px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
-                        </div>
-
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b border-gray-200">
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">User</th>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Email</th>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Tier</th>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Usage</th>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Joined</th>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="usersTable">
-                                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                    <td class="py-3 px-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">J</div>
-                                            <span class="font-semibold">John Doe</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-4 text-gray-600">john@example.com</td>
-                                    <td class="py-3 px-4"><span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">Pro</span></td>
-                                    <td class="py-3 px-4 text-gray-600">234/500 images</td>
-                                    <td class="py-3 px-4 text-gray-600">2026-06-15</td>
-                                    <td class="py-3 px-4">
-                                        <button class="text-brand-600 hover:text-brand-700 font-semibold">Edit</button>
-                                    </td>
-                                </tr>
-
-                                <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                    <td class="py-3 px-4">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white text-sm font-bold">S</div>
-                                            <span class="font-semibold">Sarah Smith</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-3 px-4 text-gray-600">sarah@example.com</td>
-                                    <td class="py-3 px-4"><span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-semibold">Free</span></td>
-                                    <td class="py-3 px-4 text-gray-600">3/5 images</td>
-                                    <td class="py-3 px-4 text-gray-600">2026-07-01</td>
-                                    <td class="py-3 px-4">
-                                        <button class="text-brand-600 hover:text-brand-700 font-semibold">Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="bg-white rounded-2xl p-6 shadow">
+                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Usage (Last 7 Days)</h3>
+                        <canvas id="usageChart"></canvas>
                     </div>
                 </div>
 
                 <!-- API Keys Section -->
-                <div id="api-keys-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow-soft">
+                <div id="users-section" class="section hidden">
+                    <div class="bg-white rounded-2xl p-6 shadow">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="font-display text-xl font-bold text-gray-900">API Keys</h3>
-                            <button class="px-4 py-2 bg-brand-500 text-white rounded-xl font-semibold hover:bg-brand-600 transition">
-                                + Generate Key
-                            </button>
+                            <button id="generate-key-btn" class="px-4 py-2 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">+ Generate Key</button>
                         </div>
-
-                        <div class="space-y-4" id="apiKeysList">
-                            <div class="p-4 bg-gray-50 rounded-xl">
-                                <div class="flex items-center justify-between mb-2">
-                                    <code class="text-sm font-mono text-gray-900">demo-key-12345</code>
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Active</span>
-                                </div>
-                                <div class="flex items-center gap-4 text-sm text-gray-600">
-                                    <span>👤 Demo Account</span>
-                                    <span>💎 Free Tier</span>
-                                    <span>📊 42/100 requests today</span>
-                                </div>
-                            </div>
-
-                            <div class="p-4 bg-gray-50 rounded-xl">
-                                <div class="flex items-center justify-between mb-2">
-                                    <code class="text-sm font-mono text-gray-900">test-key-67890</code>
-                                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Active</span>
-                                </div>
-                                <div class="flex items-center gap-4 text-sm text-gray-600">
-                                    <span>👤 Test Account</span>
-                                    <span>💎 Pro Tier</span>
-                                    <span>📊 234/1000 requests today</span>
-                                </div>
-                            </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Key</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Name</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Tier</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Today</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="apiKeysTable"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- Usage Stats Section -->
+                <!-- Usage Section -->
                 <div id="usage-section" class="section hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Images Processed</h3>
-                            <canvas id="imagesChart"></canvas>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Videos Processed</h3>
-                            <canvas id="videosChart"></canvas>
-                        </div>
+                    <div class="bg-white rounded-2xl p-6 shadow mb-6">
+                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Usage (Last 30 Days)</h3>
+                        <canvas id="usageDetailedChart"></canvas>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 shadow">
+                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Top API Keys (Last 7 Days)</h3>
+                        <div id="topUsersList" class="space-y-3"></div>
                     </div>
                 </div>
 
-                <!-- Revenue Section -->
-                <div id="revenue-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow-soft mb-6">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Revenue Overview</h3>
-                        <canvas id="revenueDetailedChart"></canvas>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="text-gray-500 text-sm font-semibold mb-2">Free Users</h3>
-                            <p class="font-display text-2xl font-bold text-gray-900">892</p>
-                            <p class="text-xs text-gray-500 mt-1">RM0 revenue</p>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="text-gray-500 text-sm font-semibold mb-2">Paid Users</h3>
-                            <p class="font-display text-2xl font-bold text-gray-900">342</p>
-                            <p class="text-xs text-gray-500 mt-1">RM12,500/month</p>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="text-gray-500 text-sm font-semibold mb-2">Avg Revenue/User</h3>
-                            <p class="font-display text-2xl font-bold text-gray-900">RM36.50</p>
-                            <p class="text-xs text-gray-500 mt-1">Per paying user</p>
+                <!-- Jobs Section -->
+                <div id="jobs-section" class="section hidden">
+                    <div class="bg-white rounded-2xl p-6 shadow">
+                        <h3 class="font-display text-xl font-bold text-gray-900 mb-6">Recent Jobs</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-200">
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Job ID</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Type</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Created</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jobsTable"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -323,260 +162,275 @@
                 <!-- Server Section -->
                 <div id="server-section" class="section hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
-                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">CPU Usage</h3>
-                            <div class="flex items-center justify-center h-48">
-                                <div class="text-center">
-                                    <p class="font-display text-5xl font-bold text-brand-500">23%</p>
-                                    <p class="text-gray-500 mt-2">2 vCPU / 4 vCPU</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-2xl p-6 shadow-soft">
+                        <div class="bg-white rounded-2xl p-6 shadow">
                             <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Memory Usage</h3>
-                            <div class="flex items-center justify-center h-48">
-                                <div class="text-center">
-                                    <p class="font-display text-5xl font-bold text-brand-500">2.1GB</p>
-                                    <p class="text-gray-500 mt-2">2.1GB / 4GB RAM</p>
-                                </div>
+                            <div class="text-center">
+                                <p class="font-display text-5xl font-bold text-teal-500" id="server-memory">-</p>
+                                <p class="text-gray-500 mt-2" id="server-memory-detail">-</p>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-6 shadow">
+                            <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Uptime</h3>
+                            <div class="text-center">
+                                <p class="font-display text-5xl font-bold text-teal-500" id="server-uptime">-</p>
+                                <p class="text-gray-500 mt-2" id="server-platform">-</p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="bg-white rounded-2xl p-6 shadow-soft">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Server Status</h3>
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                                <span class="font-semibold text-gray-900">API Server</span>
-                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">✅ Online</span>
-                            </div>
-                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                                <span class="font-semibold text-gray-900">Database</span>
-                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">✅ Online</span>
-                            </div>
-                            <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
-                                <span class="font-semibold text-gray-900">Telegram Bot</span>
-                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">✅ Online</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Settings Section -->
-                <div id="settings-section" class="section hidden">
-                    <div class="bg-white rounded-2xl p-6 shadow-soft">
-                        <h3 class="font-display text-xl font-bold text-gray-900 mb-6">General Settings</h3>
-
-                        <div class="space-y-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Site Name</label>
-                                <input type="text" value="Veo Watermark Remover" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Admin Email</label>
-                                <input type="email" value="admin@veo.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Free Tier Limits</label>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <input type="number" value="5" placeholder="Images/day" class="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
-                                    <input type="number" value="1" placeholder="Videos/day" class="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">Maintenance Mode</label>
-                                <label class="flex items-center gap-3 cursor-pointer">
-                                    <input type="checkbox" class="w-5 h-5 rounded">
-                                    <span class="text-gray-700">Enable maintenance mode</span>
-                                </label>
-                            </div>
-
-                            <button class="px-6 py-3 bg-brand-500 text-white rounded-xl font-semibold hover:bg-brand-600 transition">
-                                Save Settings
-                            </button>
-                        </div>
+                    <div class="bg-white rounded-2xl p-6 shadow">
+                        <h3 class="font-display text-xl font-bold text-gray-900 mb-4">Service Status</h3>
+                        <div class="space-y-3" id="serviceStatus"></div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- Generate Key Modal -->
+    <div id="key-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md">
+            <h3 class="font-display text-xl font-bold text-gray-900 mb-6">Generate New API Key</h3>
+            <form id="key-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                    <input type="text" id="key-name" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <input type="email" id="key-email" required class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tier</label>
+                    <select id="key-tier" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="free">Free (100 req/day)</option>
+                        <option value="pro">Pro (1000 req/day)</option>
+                    </select>
+                </div>
+                <div class="flex gap-3">
+                    <button type="submit" class="flex-1 px-6 py-3 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition">Generate</button>
+                    <button type="button" id="cancel-key" class="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Menu navigation
-        const menuItems = document.querySelectorAll('.menu-item');
-        const sections = document.querySelectorAll('.section');
-        const pageTitle = document.getElementById('pageTitle');
-        const pageSubtitle = document.getElementById('pageSubtitle');
+    const API = '/api/admin';
+    let usageChartInstance = null;
+    let usageDetailedChartInstance = null;
 
-        const sectionInfo = {
-            dashboard: { title: 'Dashboard', subtitle: 'Overview of your watermark removal service' },
-            users: { title: 'Users', subtitle: 'Manage your users and subscriptions' },
-            'api-keys': { title: 'API Keys', subtitle: 'Manage API keys and access' },
-            usage: { title: 'Usage Stats', subtitle: 'Monitor API usage and performance' },
-            revenue: { title: 'Revenue', subtitle: 'Track your earnings and growth' },
-            server: { title: 'Server', subtitle: 'Monitor server health and performance' },
-            settings: { title: 'Settings', subtitle: 'Configure your service settings' }
-        };
+    // Check auth on load
+    async function checkAuth() {
+        const res = await fetch(`${API}/status`);
+        const data = await res.json();
+        if (data.authenticated) {
+            showPanel();
+        } else {
+            showLogin();
+        }
+    }
 
-        menuItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const section = item.dataset.section;
+    function showLogin() {
+        document.getElementById('login-page').classList.remove('hidden');
+        document.getElementById('admin-panel').classList.add('hidden');
+    }
 
-                // Update menu
-                menuItems.forEach(i => {
-                    i.classList.remove('active');
-                    i.classList.add('text-gray-700');
-                });
-                item.classList.add('active');
-                item.classList.remove('text-gray-700');
+    function showPanel() {
+        document.getElementById('login-page').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        loadDashboard();
+    }
 
-                // Update section
-                sections.forEach(s => s.classList.add('hidden'));
-                document.getElementById(`${section}-section`).classList.remove('hidden');
-
-                // Update header
-                pageTitle.textContent = sectionInfo[section].title;
-                pageSubtitle.textContent = sectionInfo[section].subtitle;
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+        
+        try {
+            const res = await fetch(`${API}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
             });
-        });
-
-        // Charts
-        // Usage Chart
-        const usageCtx = document.getElementById('usageChart').getContext('2d');
-        new Chart(usageCtx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Images',
-                    data: [1200, 1900, 1500, 2100, 2400, 1800, 2200],
-                    borderColor: '#14b8a6',
-                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Videos',
-                    data: [300, 450, 380, 520, 600, 420, 550],
-                    borderColor: '#fbbf24',
-                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
+            const data = await res.json();
+            if (data.success) {
+                showPanel();
+            } else {
+                errorEl.textContent = data.message || 'Login failed';
+                errorEl.classList.remove('hidden');
             }
-        });
+        } catch (err) {
+            errorEl.textContent = 'Connection error';
+            errorEl.classList.remove('hidden');
+        }
+    });
 
-        // Revenue Chart
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(revenueCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Revenue (RM)',
-                    data: [4500, 6200, 7800, 9100, 10500, 12500],
-                    backgroundColor: '#14b8a6',
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        await fetch(`${API}/logout`, { method: 'POST' });
+        showLogin();
+    });
 
-        // Images Chart
-        const imagesCtx = document.getElementById('imagesChart').getContext('2d');
-        new Chart(imagesCtx, {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Images Processed',
-                    data: [8500, 11200, 13800, 15200],
-                    borderColor: '#14b8a6',
-                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
+    // Menu navigation
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const section = item.dataset.section;
+            document.querySelectorAll('.menu-item').forEach(i => { i.classList.remove('active'); i.classList.add('text-gray-700'); });
+            item.classList.add('active');
+            item.classList.remove('text-gray-700');
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`${section}-section`).classList.remove('hidden');
+            
+            const titles = { dashboard: 'Dashboard', users: 'API Keys', usage: 'Usage Stats', jobs: 'Jobs', server: 'Server' };
+            document.getElementById('pageTitle').textContent = titles[section] || section;
+            
+            if (section === 'dashboard') loadDashboard();
+            if (section === 'users') loadApiKeys();
+            if (section === 'usage') loadUsage();
+            if (section === 'jobs') loadJobs();
+            if (section === 'server') loadServer();
         });
+    });
 
-        // Videos Chart
-        const videosCtx = document.getElementById('videosChart').getContext('2d');
-        new Chart(videosCtx, {
-            type: 'line',
-            data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                datasets: [{
-                    label: 'Videos Processed',
-                    data: [2100, 2800, 3400, 3800],
-                    borderColor: '#fbbf24',
-                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
+    // Load Dashboard
+    async function loadDashboard() {
+        try {
+            const res = await fetch(`${API}/dashboard`);
+            const data = await res.json();
+            document.getElementById('stat-api-keys').textContent = data.stats.totalApiKeys;
+            document.getElementById('stat-today').textContent = data.stats.todayUsage.toLocaleString();
+            document.getElementById('stat-total').textContent = data.stats.totalUsage.toLocaleString();
+            document.getElementById('stat-jobs').textContent = data.stats.activeJobs;
 
-        // Revenue Detailed Chart
-        const revenueDetailedCtx = document.getElementById('revenueDetailedChart').getContext('2d');
-        new Chart(revenueDetailedCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Basic (RM29)',
-                    data: [1450, 2030, 2610, 3190, 3770, 4350],
-                    borderColor: '#14b8a6',
-                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Pro (RM79)',
-                    data: [2370, 3160, 3950, 4740, 5530, 6320],
-                    borderColor: '#fbbf24',
-                    backgroundColor: 'rgba(251, 191, 36, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }, {
-                    label: 'Business (RM199)',
-                    data: [597, 796, 995, 1194, 1393, 1592],
-                    borderColor: '#8b5cf6',
-                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
+            // Chart
+            if (usageChartInstance) usageChartInstance.destroy();
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            usageChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.dailyUsage.map(d => d.date),
+                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), backgroundColor: '#14b8a6', borderRadius: 8 }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+        } catch (err) { console.error('Dashboard error:', err); }
+    }
+
+    // Load API Keys
+    async function loadApiKeys() {
+        try {
+            const res = await fetch(`${API}/api-keys`);
+            const data = await res.json();
+            const tbody = document.getElementById('apiKeysTable');
+            tbody.innerHTML = data.apiKeys.map(k => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-3 px-4"><code class="text-sm font-mono">${k.key}</code></td>
+                    <td class="py-3 px-4">${k.name || '-'}</td>
+                    <td class="py-3 px-4"><span class="px-3 py-1 ${k.tier === 'pro' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-700'} rounded-full text-sm font-semibold">${k.tier}</span></td>
+                    <td class="py-3 px-4">${k.today_usage}/${k.daily_limit}</td>
+                    <td class="py-3 px-4"><span class="px-3 py-1 ${k.active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-full text-xs font-semibold">${k.active ? 'Active' : 'Revoked'}</span></td>
+                    <td class="py-3 px-4">${k.active ? `<button onclick="revokeKey(${k.id})" class="text-red-500 hover:text-red-700 font-semibold">Revoke</button>` : '-'}</td>
+                </tr>
+            `).join('');
+        } catch (err) { console.error('API keys error:', err); }
+    }
+
+    // Generate Key
+    document.getElementById('generate-key-btn').addEventListener('click', () => document.getElementById('key-modal').classList.remove('hidden'));
+    document.getElementById('cancel-key').addEventListener('click', () => document.getElementById('key-modal').classList.add('hidden'));
+    document.getElementById('key-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('key-name').value;
+        const email = document.getElementById('key-email').value;
+        const tier = document.getElementById('key-tier').value;
+        await fetch(`${API}/api-keys`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, tier }) });
+        document.getElementById('key-modal').classList.add('hidden');
+        loadApiKeys();
+    });
+
+    async function revokeKey(id) {
+        if (confirm('Revoke this API key?')) {
+            await fetch(`${API}/api-keys/${id}`, { method: 'DELETE' });
+            loadApiKeys();
+        }
+    }
+
+    // Load Usage
+    async function loadUsage() {
+        try {
+            const res = await fetch(`${API}/usage`);
+            const data = await res.json();
+            if (usageDetailedChartInstance) usageDetailedChartInstance.destroy();
+            const ctx = document.getElementById('usageDetailedChart').getContext('2d');
+            usageDetailedChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.dailyUsage.map(d => d.date),
+                    datasets: [{ label: 'Requests', data: data.dailyUsage.map(d => d.count), borderColor: '#14b8a6', backgroundColor: 'rgba(20,184,166,0.1)', tension: 0.4, fill: true }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+            document.getElementById('topUsersList').innerHTML = data.topUsers.map(u => `
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                    <code class="text-sm font-mono">${u.api_key}</code>
+                    <span class="font-semibold text-teal-600">${u.count} requests</span>
+                </div>
+            `).join('');
+        } catch (err) { console.error('Usage error:', err); }
+    }
+
+    // Load Jobs
+    async function loadJobs() {
+        try {
+            const res = await fetch(`${API}/jobs`);
+            const data = await res.json();
+            document.getElementById('jobsTable').innerHTML = data.jobs.map(j => `
+                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                    <td class="py-3 px-4"><code class="text-xs">${j.id.substring(0, 8)}...</code></td>
+                    <td class="py-3 px-4">${j.type}</td>
+                    <td class="py-3 px-4"><span class="px-3 py-1 ${j.status === 'completed' ? 'bg-green-100 text-green-700' : j.status === 'failed' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'} rounded-full text-xs font-semibold">${j.status}</span></td>
+                    <td class="py-3 px-4 text-sm text-gray-500">${new Date(j.created_at).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        } catch (err) { console.error('Jobs error:', err); }
+    }
+
+    // Load Server
+    async function loadServer() {
+        try {
+            const res = await fetch(`${API}/server`);
+            const data = await res.json();
+            const memUsed = (data.server.memory.heapUsed / 1024 / 1024).toFixed(1);
+            const memTotal = (data.server.totalMemory / 1024 / 1024 / 1024).toFixed(1);
+            document.getElementById('server-memory').textContent = `${memUsed}MB`;
+            document.getElementById('server-memory-detail').textContent = `Heap / ${memTotal}GB system RAM`;
+            const uptime = data.server.uptime;
+            const hours = Math.floor(uptime / 3600);
+            const mins = Math.floor((uptime % 3600) / 60);
+            document.getElementById('server-uptime').textContent = `${hours}h ${mins}m`;
+            document.getElementById('server-platform').textContent = `${data.server.platform} | ${data.server.cpus} CPUs`;
+            document.getElementById('serviceStatus').innerHTML = `
+                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
+                    <span class="font-semibold">API Server</span>
+                    <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">Online</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
+                    <span class="font-semibold">Database</span>
+                    <span class="px-3 py-1 ${data.database.connected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'} rounded-full text-sm font-semibold">${data.database.connected ? 'Online' : 'Offline'}</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-green-50 rounded-xl">
+                    <span class="font-semibold">Active Jobs</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold">${data.activeJobs} processing</span>
+                </div>
+            `;
+        } catch (err) { console.error('Server error:', err); }
+    }
+
+    // Init
+    checkAuth();
     </script>
 </body>
 </html>

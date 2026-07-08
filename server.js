@@ -8,11 +8,26 @@ const { execFile } = require('child_process');
 const cors = require('cors');
 const helmet = require('helmet');
 const { authenticateApiKey } = require('./middleware/auth');
+const { authenticateAdmin, adminLogin, adminLogout, adminStatus } = require('./middleware/adminAuth');
 const apiRoutes = require('./routes/api');
+const adminRoutes = require('./routes/admin');
 const { db, pool } = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Simple cookie parser (no external dependency)
+app.use((req, res, next) => {
+  req.cookies = {};
+  const cookieHeader = req.headers.cookie;
+  if (cookieHeader) {
+    cookieHeader.split(';').forEach(cookie => {
+      const [name, ...rest] = cookie.split('=');
+      req.cookies[name.trim()] = rest.join('=').trim();
+    });
+  }
+  next();
+});
 
 // Security middleware - allow Tailwind CDN and Google Fonts
 app.use(helmet({
@@ -99,6 +114,14 @@ app.use('/batch', express.static(batchDir));
 
 // API routes (with authentication)
 app.use('/api/v1', authenticateApiKey, apiRoutes);
+
+// Admin auth routes (no auth required)
+app.post('/api/admin/login', adminLogin);
+app.post('/api/admin/logout', adminLogout);
+app.get('/api/admin/status', adminStatus);
+
+// Admin routes (with authentication)
+app.use('/api/admin', authenticateAdmin, adminRoutes);
 
 // Health check endpoint
 app.get('/health', async (req, res) => {
