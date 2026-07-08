@@ -29,21 +29,59 @@ app.use((req, res, next) => {
   next();
 });
 
-// Security middleware - allow Tailwind CDN and Google Fonts
+// Security middleware - tightened CSP
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "https://cdn.tailwindcss.com", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
       styleSrc: ["'self'", "https:", "'unsafe-inline'"],
       fontSrc: ["'self'", "https:", "data:"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", "data:", "https:", "blob:"],
       connectSrc: ["'self'", "https:"],
+      mediaSrc: ["'self'", "blob:"],
+      frameAncestors: ["'self'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      upgradeInsecureRequests: [],
     },
   },
   crossOriginEmbedderPolicy: false,
+  crossOriginOpenerPolicy: { policy: "same-origin" },
+  crossOriginResourcePolicy: { policy: "same-origin" },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  xFrameOptions: { action: "sameorigin" },
+  permissionsPolicy: {
+    features: {
+      camera: [],
+      microphone: [],
+      geolocation: [],
+      payment: [],
+    },
+  },
 }));
-app.use(cors());
+
+// CORS - whitelist specific origins
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+    const allowed = [
+      'https://viotools.my.id',
+      'https://www.viotools.my.id',
+      'http://localhost:3000',
+    ];
+    if (allowed.indexOf(origin) !== -1 || origin.endsWith('.viotools.my.id')) {
+      callback(null, true);
+    } else {
+      callback(null, false);
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'X-API-Key', 'X-Admin-Token'],
+}));
 app.use(express.json());
 
 // Create necessary directories
