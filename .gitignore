@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Uploads & processed files
+uploads/
+processed/
+batch/
+api-uploads/
+api-processed/
+api-jobs/
+api-usage/
+image-uploads/
+temp/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Executables (too large for GitHub)
+*.exe
+GeminiWatermarkTool-Video
+
+# Keys & secrets
+api-keys.json
+telegram-users.json
+
+# Logs
+*.log

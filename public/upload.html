@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload for AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .upload-area {
+            border: 3px dashed #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #667eea;
+            background-color: #f7fafc;
+        }
+        .upload-area.dragover {
+            border-color: #48bb78;
+            background-color: #f0fff4;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-2xl p-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">📸 Image Upload for AI</h1>
+            <p class="text-gray-600 mb-6">Upload images here so AI can read them</p>
+
+            <!-- Upload Area -->
+            <div id="uploadArea" class="upload-area rounded-lg p-12 text-center cursor-pointer mb-6">
+                <div class="text-6xl mb-4">📁</div>
+                <p class="text-xl text-gray-700 mb-2">Drag & drop images here</p>
+                <p class="text-gray-500 mb-4">or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+                <button onclick="document.getElementById('fileInput').click()" 
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition">
+                    Select Images
+                </button>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="progress" class="hidden mb-6">
+                <div class="bg-gray-200 rounded-full h-4 overflow-hidden">
+                    <div id="progressBar" class="bg-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-center mt-2 text-gray-600">Uploading...</p>
+            </div>
+
+            <!-- Status Message -->
+            <div id="status" class="hidden mb-6 p-4 rounded-lg"></div>
+
+            <!-- Uploaded Images Gallery -->
+            <div class="mt-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📷 Uploaded Images</h2>
+                <div id="imageGallery" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Images will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="mt-8 bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                <h3 class="font-bold text-blue-800 mb-2">📋 Instructions:</h3>
+                <ol class="list-decimal list-inside text-blue-700 space-y-1">
+                    <li>Upload your screenshots/images here</li>
+                    <li>Images will be saved to <code class="bg-blue-100 px-2 py-1 rounded">image-uploads/</code> folder</li>
+                    <li>Tell AI the filename or path</li>
+                    <li>AI can now read your images!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const progress = document.getElementById('progress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const status = document.getElementById('status');
+        const imageGallery = document.getElementById('imageGallery');
+
+        // Drag and drop handlers
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        async function handleFiles(files) {
+            if (files.length === 0) return;
+
+            for (let i = 0; i < files.length; i++) {
+                await uploadFile(files[i], i + 1, files.length);
+            }
+
+            // Refresh gallery after all uploads
+            loadGallery();
+        }
+
+        function uploadFile(file, current, total) {
+            return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                progress.classList.remove('hidden');
+                progressBar.style.width = '0%';
+                progressText.textContent = `Uploading ${current}/${total}: ${file.name}`;
+
+                const xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percent = (e.loaded / e.total) * 100;
+                        progressBar.style.width = percent + '%';
+                    }
+                });
+
+                xhr.addEventListener('load', () => {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        showStatus(`✅ ${file.name} uploaded successfully!`, 'success');
+                        resolve();
+                    } else {
+                        const response = JSON.parse(xhr.responseText);
+                        showStatus(`❌ Error: ${response.error}`, 'error');
+                        reject(response.error);
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    showStatus('❌ Upload failed', 'error');
+                    reject('Upload failed');
+                });
+
+                xhr.open('POST', '/upload');
+                xhr.send(formData);
+            });
+        }
+
+        function showStatus(message, type) {
+            status.classList.remove('hidden');
+            status.textContent = message;
+            status.className = `mb-6 p-4 rounded-lg ${
+                type === 'success' ? 'bg-green-50 text-green-800 border-l-4 border-green-500' :
+                type === 'error' ? 'bg-red-50 text-red-800 border-l-4 border-red-500' :
+                'bg-blue-50 text-blue-800 border-l-4 border-blue-500'
+            }`;
+
+            setTimeout(() => {
+                status.classList.add('hidden');
+                progress.classList.add('hidden');
+            }, 3000);
+        }
+
+        async function loadGallery() {
+            try {
+                const response = await fetch('/images');
+                const images = await response.json();
+
+                imageGallery.innerHTML = '';
+
+                if (images.length === 0) {
+                    imageGallery.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No images uploaded yet</p>';
+                    return;
+                }
+
+                images.forEach(img => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-gray-100 rounded-lg overflow-hidden shadow hover:shadow-lg transition';
+                    div.innerHTML = `
+                        <img src="${img.path}" alt="${img.filename}" class="w-full h-48 object-cover">
+                        <div class="p-3">
+                            <p class="text-sm font-semibold text-gray-800 truncate">${img.filename}</p>
+                            <p class="text-xs text-gray-500 mt-1">image-uploads/${img.filename}</p>
+                            <button onclick="copyPath('image-uploads/${img.filename}')" 
+                                    class="mt-2 text-xs bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded transition">
+                                Copy Path
+                            </button>
+                        </div>
+                    `;
+                    imageGallery.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error loading gallery:', error);
+            }
+        }
+
+        function copyPath(path) {
+            navigator.clipboard.writeText(path).then(() => {
+                showStatus(`📋 Copied: ${path}`, 'success');
+            });
+        }
+
+        // Load gallery on page load
+        loadGallery();
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veo Watermark Remover API Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+        code { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="max-w-6xl mx-auto px-6 py-12">
+        <!-- Header -->
+        <div class="mb-12">
+            <h1 class="font-display text-5xl font-bold text-gray-900 mb-4">
+                Veo Watermark Remover <span class="text-brand-500">API</span>
+            </h1>
+            <p class="text-xl text-gray-600">Complete API documentation for watermark removal services</p>
+        </div>
+
+        <!-- Authentication -->
+        <section class="mb-12 bg-white rounded-2xl p-8 shadow-soft">
+            <h2 class="font-display text-3xl font-bold text-gray-900 mb-6">🔐 Authentication</h2>
+            <p class="text-gray-600 mb-4">All API requests require an API key passed in the <code class="bg-gray-100 px-2 py-1 rounded">X-API-Key</code> header.</p>
+            
+            <h3 class="font-display text-xl font-semibold text-gray-900 mt-6 mb-3">Demo API Keys</h3>
+            <div class="space-y-3">
+                <div class="bg-gray-50 p-4 rounded-xl">
+                    <code class="text-brand-600 font-semibold">demo-key-12345</code>
+                    <span class="text-gray-600 ml-3">Free tier - 100 requests/day</span>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl">
+                    <code class="text-brand-600 font-semibold">test-key-67890</code>
+                    <span class="text-gray-600 ml-3">Pro tier - 1000 requests/day</span>
+                </div>
+            </div>
+
+            <h3 class="font-display text-xl font-semibold text-gray-900 mt-6 mb-3">Example Request</h3>
+            <pre><code>curl -X POST http://localhost:3000/api/v1/remove/image \
+  -H "X-API-Key: demo-key-12345" \
+  -F "image=@/path/to/image.jpg"</code></pre>
+        </section>
+
+        <!-- Endpoints -->
+        <section class="mb-12">
+            <h2 class="font-display text-3xl font-bold text-gray-900 mb-6">📡 API Endpoints</h2>
+
+            <!-- Remove Image -->
+            <div class="bg-white rounded-2xl p-8 shadow-soft mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">POST</span>
+                    <code class="text-lg font-semibold">/api/v1/remove/image</code>
+                </div>
+                <p class="text-gray-600 mb-4">Remove watermark from an image. Returns processed image URL.</p>
+                
+                <h4 class="font-semibold text-gray-900 mb-2">Request</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-1">
+                    <li><code>image</code> (file) - Image file (JPG, PNG, WebP, max 20MB)</li>
+                </ul>
+
+                <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                <pre><code>{
+  "success": true,
+  "message": "Image processed successfully",
+  "downloadUrl": "/api/v1/download/filename.png",
+  "filename": "processed_image.png",
+  "meta": {
+    "originalName": "original.jpg",
+    "size": 1234567,
+    "processedAt": "2026-07-06T10:00:00.000Z"
+  }
+}</code></pre>
+            </div>
+
+            <!-- Remove Video -->
+            <div class="bg-white rounded-2xl p-8 shadow-soft mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">POST</span>
+                    <code class="text-lg font-semibold">/api/v1/remove/video</code>
+                </div>
+                <p class="text-gray-600 mb-4">Remove watermark from a video. Returns job ID for async processing.</p>
+                
+                <h4 class="font-semibold text-gray-900 mb-2">Request</h4>
+                <ul class="list-disc list-inside text-gray-600 mb-4 space-y-1">
+                    <li><code>video</code> (file) - Video file (MP4, MOV, MKV, AVI, max 500MB)</li>
+                </ul>
+
+                <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                <pre><code>{
+  "success": true,
+  "message": "Video processing started",
+  "jobId": "abc123-def456-ghi789",
+  "statusUrl": "/api/v1/status/abc123-def456-ghi789",
+  "estimatedTime": "2-5 minutes depending on video length"
+}</code></pre>
+            </div>
+
+            <!-- Check Status -->
+            <div class="bg-white rounded-2xl p-8 shadow-soft mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">GET</span>
+                    <code class="text-lg font-semibold">/api/v1/status/:jobId</code>
+                </div>
+                <p class="text-gray-600 mb-4">Check the status of a video processing job.</p>
+                
+                <h4 class="font-semibold text-gray-900 mb-2">Response (Processing)</h4>
+                <pre><code>{
+  "jobId": "abc123-def456-ghi789",
+  "status": "processing",
+  "type": "video",
+  "createdAt": "2026-07-06T10:00:00.000Z",
+  "completedAt": null,
+  "progress": 45
+}</code></pre>
+
+                <h4 class="font-semibold text-gray-900 mb-2">Response (Completed)</h4>
+                <pre><code>{
+  "jobId": "abc123-def456-ghi789",
+  "status": "completed",
+  "type": "video",
+  "createdAt": "2026-07-06T10:00:00.000Z",
+  "completedAt": "2026-07-06T10:05:00.000Z",
+  "downloadUrl": "/api/v1/download/processed_video.mp4",
+  "filename": "processed_video.mp4"
+}</code></pre>
+            </div>
+
+            <!-- Download -->
+            <div class="bg-white rounded-2xl p-8 shadow-soft mb-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">GET</span>
+                    <code class="text-lg font-semibold">/api/v1/download/:filename</code>
+                </div>
+                <p class="text-gray-600 mb-4">Download a processed file.</p>
+                
+                <h4 class="font-semibold text-gray-900 mb-2">Example</h4>
+                <pre><code>curl -O http://localhost:3000/api/v1/download/processed_video.mp4 \
+  -H "X-API-Key: demo-key-12345"</code></pre>
+            </div>
+
+            <!-- Usage -->
+            <div class="bg-white rounded-2xl p-8 shadow-soft">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">GET</span>
+                    <code class="text-lg font-semibold">/api/v1/usage</code>
+                </div>
+                <p class="text-gray-600 mb-4">Get API usage statistics for your API key.</p>
+                
+                <h4 class="font-semibold text-gray-900 mb-2">Response</h4>
+                <pre><code>{
+  "apiKey": "demo-key-12345",
+  "total": 42,
+  "byEndpoint": {
+    "/remove/image": 30,
+    "/remove/video": 12
+  },
+  "byDate": {
+    "2026-07-06": 42
+  },
+  "today": 42,
+  "limit": 100,
+  "remaining": 58,
+  "window": "24 hours",
+  "lastUsed": "2026-07-06T10:00:00.000Z"
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Rate Limits -->
+        <section class="mb-12 bg-white rounded-2xl p-8 shadow-soft">
+            <h2 class="font-display text-3xl font-bold text-gray-900 mb-6">⚡ Rate Limits</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-6 rounded-xl">
+                    <h3 class="font-display text-xl font-semibold text-gray-900 mb-3">Free Tier</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>✓ 100 requests per day</li>
+                        <li>✓ 1000 requests per month</li>
+                        <li>✓ Image & video processing</li>
+                        <li>✓ Basic support</li>
+                    </ul>
+                </div>
+                <div class="bg-brand-50 p-6 rounded-xl border-2 border-brand-200">
+                    <h3 class="font-display text-xl font-semibold text-gray-900 mb-3">Pro Tier</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>✓ 1000 requests per day</li>
+                        <li>✓ 10000 requests per month</li>
+                        <li>✓ Priority processing</li>
+                        <li>✓ Priority support</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Error Codes -->
+        <section class="mb-12 bg-white rounded-2xl p-8 shadow-soft">
+            <h2 class="font-display text-3xl font-bold text-gray-900 mb-6">❌ Error Codes</h2>
+            <div class="space-y-3">
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                    <code class="text-red-600 font-semibold whitespace-nowrap">401</code>
+                    <div>
+                        <p class="font-semibold text-gray-900">Unauthorized</p>
+                        <p class="text-gray-600 text-sm">API key missing or invalid</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                    <code class="text-red-600 font-semibold whitespace-nowrap">403</code>
+                    <div>
+                        <p class="font-semibold text-gray-900">Forbidden</p>
+                        <p class="text-gray-600 text-sm">API key disabled or access denied</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                    <code class="text-red-600 font-semibold whitespace-nowrap">404</code>
+                    <div>
+                        <p class="font-semibold text-gray-900">Not Found</p>
+                        <p class="text-gray-600 text-sm">Job or file not found</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                    <code class="text-red-600 font-semibold whitespace-nowrap">429</code>
+                    <div>
+                        <p class="font-semibold text-gray-900">Too Many Requests</p>
+                        <p class="text-gray-600 text-sm">Rate limit exceeded</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-xl">
+                    <code class="text-red-600 font-semibold whitespace-nowrap">500</code>
+                    <div>
+                        <p class="font-semibold text-gray-900">Internal Server Error</p>
+                        <p class="text-gray-600 text-sm">Processing failed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-500 text-sm">
+            <p>API Base URL: <code class="bg-gray-100 px-2 py-1 rounded">http://localhost:3000/api/v1</code></p>
+            <p class="mt-2">For support, contact: api@veowatermarkremover.com</p>
+        </div>
+    </div>
+</body>
+</html>
