@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — VeoTools</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .dashboard-container {
+            padding-top: 100px;
+            min-height: 100vh;
+            background: var(--color-cream);
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .dashboard-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-ink);
+        }
+
+        .dashboard-header p {
+            color: var(--color-muted);
+            font-size: 17px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-soft-sm);
+        }
+
+        .stat-icon {
+            font-size: 40px;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-ink);
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--color-muted);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: var(--shadow-soft-sm);
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .tool-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-ink);
+        }
+
+        .tool-card p {
+            font-size: 15px;
+            color: var(--color-body);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .usage-info {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: var(--shadow-soft-sm);
+        }
+
+        .usage-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--color-ink);
+        }
+
+        .usage-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .usage-info li {
+            padding: 8px 0;
+            color: var(--color-body);
+            font-size: 15px;
+        }
+
+        .user-email {
+            font-size: 14px;
+            color: var(--color-body);
+            margin-right: 12px;
+        }
+
+        .key-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .key-value {
+            flex: 1;
+            overflow-wrap: anywhere;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 13px;
+        }
+
+        .copy-key {
+            border: 1px solid rgba(15, 118, 110, .2);
+            background: #ecfdf8;
+            color: #0f766e;
+            border-radius: 8px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .copy-key.copied {
+            background: #0f766e;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+
+            .stats-grid,
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <div class="logo-icon">V</div>
+                    <span class="logo-text">VeoTools</span>
+                </div>
+                <div class="nav-actions">
+                    <span id="userEmail" class="user-email"></span>
+                    <button id="logoutBtn" class="btn btn-outline btn-sm">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Welcome to Your Dashboard</h1>
+                <p>Manage your watermark removal tools</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🎥</div>
+                    <div class="stat-info">
+                        <div class="stat-value" id="videosUsed">0</div>
+                        <div class="stat-label">Videos Processed Today</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">🔑</div>
+                    <div class="stat-info">
+                        <div class="key-row">
+                            <div class="stat-value key-value" id="apiKey">-</div>
+                            <button class="copy-key" id="copyApiKey" type="button">Copy</button>
+                        </div>
+                        <div class="stat-label">Your API Key</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">🎥</div>
+                    <h3>Video Watermark Removal</h3>
+                    <p>Remove watermarks from Veo videos with server-side processing</p>
+                    <a href="/video-tool.html" class="btn btn-primary">Open Tool →</a>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-icon">📚</div>
+                    <h3>API Documentation</h3>
+                    <p>Integrate video watermark removal into your applications</p>
+                    <a href="/docs-api" class="btn btn-outline">View Docs →</a>
+                </div>
+            </div>
+
+            <div class="usage-info">
+                <h3>Usage Limits (Free Tier)</h3>
+                <ul>
+                    <li>✓ 1 video per day</li>
+                    <li>✓ Server-based video processing</li>
+                    <li>✓ API access with your key</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="/user-dashboard.js"></script>
+</body>
+</html>

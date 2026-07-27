@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VioTools REST API and MCP documentation.">
+<title>VioTools — API Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,wght@1,600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#102a2a;--muted:#627372;--teal:#0f766e;--mint:#14b8a6;--pale:#ecfdf8;--paper:#f7f8f4;--line:#dfe7e3;--code:#102321}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Manrope,sans-serif;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}.grain{position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}.nav{position:sticky;top:0;z-index:40;background:#f7f8f4e8;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.navin{max-width:1180px;height:68px;margin:auto;padding:0 24px;display:flex;align-items:center;gap:18px}.logo{font-weight:800;font-size:20px;letter-spacing:-.7px}.logo i{color:var(--mint);font-style:normal}.tag{font:500 11px DM Mono;background:var(--pale);color:var(--teal);padding:5px 8px;border-radius:7px}.grow{flex:1}.navlink{font-size:13px;font-weight:700;color:var(--muted)}.button{background:var(--teal);color:white;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:800}.wrap{max-width:1180px;margin:auto;padding:45px 24px 70px}.eyebrow{font:500 11px DM Mono;color:var(--teal);letter-spacing:.12em;text-transform:uppercase}.hero h1{font-size:46px;line-height:1.05;letter-spacing:-2.2px;margin:9px 0}.hero em{font-family:Newsreader;color:var(--teal)}.hero p{color:var(--muted);font-size:17px;line-height:1.7;margin:0}.status{display:inline-flex;align-items:center;gap:7px;margin-top:18px;font:500 11px DM Mono;color:#166534;background:#edfbee;border:1px solid #ccebd2;border-radius:99px;padding:6px 10px}.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #dcfce7}.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:34px;margin-top:38px}.side{position:sticky;top:94px;align-self:start;font-size:13px}.side b{display:block;margin:18px 0 7px;color:#98a4a2;font-size:10px;letter-spacing:.1em;text-transform:uppercase}.side a{display:block;padding:6px 9px;margin-left:-9px;color:var(--muted);border-radius:7px}.side a:hover{color:var(--teal);background:#eaf4f0}.card{background:#fff;border:1px solid #dfe7e3d9;border-radius:22px;padding:28px;margin-bottom:17px;box-shadow:0 3px 8px #0f373208,0 22px 55px #0f37320e;scroll-margin-top:90px}.card h2{font-size:23px;letter-spacing:-.7px;margin:0 0 9px}.card h3{font-size:11px;margin:21px 0 7px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal)}.card p,.card li{color:var(--muted);font-size:14px;line-height:1.75}.callout{padding:13px 15px;background:var(--pale);border-left:3px solid var(--mint);border-radius:9px;color:#285e59;font-size:13px;line-height:1.6;margin-top:15px}.method{display:inline-block;padding:4px 9px;border-radius:6px;font:500 10px DM Mono;vertical-align:3px;margin-right:7px}.post{background:#dcfce7;color:#15803d}.get{background:#dbeafe;color:#1d4ed8}.delete{background:#fee2e2;color:#b91c1c}.path{font:500 14px DM Mono;overflow-wrap:anywhere}.inl{font:500 12px DM Mono;color:var(--teal);background:var(--pale);padding:2px 6px;border-radius:5px}.codeblock{position:relative;background:var(--code);border-radius:12px;margin:9px 0}.codeblock pre{margin:0;padding:17px 18px;color:#cceee8;overflow:auto;font:400 12px/1.7 DM Mono;white-space:pre}.copy{position:absolute;top:8px;right:8px;border:1px solid #ffffff26;background:#ffffff14;color:#d7fff6;border-radius:7px;padding:5px 8px;font:500 10px DM Mono;cursor:pointer;transition:.18s}.copy:hover{background:#14b8a6;color:#08211f;border-color:#14b8a6}.copy.copied{background:#22c55e;border-color:#22c55e;color:#052e16}.label{font:500 10px DM Mono;text-transform:uppercase;letter-spacing:.1em;color:#94a3b8;margin-top:17px}.table{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}th{text-align:left;color:#96a3a1;text-transform:uppercase;font-size:9px;letter-spacing:.1em;padding:9px;border-bottom:2px solid #edf1ef}td{padding:10px 9px;border-bottom:1px solid #edf1ef;color:var(--muted);vertical-align:top}td:first-child{font:500 12px DM Mono;color:var(--teal)}.req{font-size:10px;color:#dc2626;font-weight:800}.opt{font-size:10px;color:#9ca3af}.tools,.errors{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.tool,.error{padding:13px;border:1px solid var(--line);border-radius:11px}.tool code{font:500 11px DM Mono;color:var(--teal);overflow-wrap:anywhere}.tool small{display:block;color:var(--muted);margin-top:4px;line-height:1.5}.error{background:#fafbf9;color:var(--muted);font-size:12px}.error b{font:500 12px DM Mono;color:#dc2626;margin-right:7px}.footer{text-align:center;color:#82908e;font-size:12px;margin-top:35px}@media(max-width:760px){.tag,.navlink{display:none}.wrap{padding:32px 16px 50px}.hero h1{font-size:36px}.layout{display:block;margin-top:26px}.side{position:relative;top:auto;display:flex;overflow:auto;gap:7px;margin-bottom:16px}.side b{display:none}.side a{white-space:nowrap;margin:0;padding:7px 10px;border:1px solid var(--line);background:white}.card{padding:21px;border-radius:17px}.tools,.errors{grid-template-columns:1fr}.codeblock pre{font-size:11px}.copy{top:6px;right:6px;padding:4px 7px}}
+</style></head>
+<body><div class="grain"></div>
+<nav class="nav"><div class="navin"><a href="/" class="logo">VioTools<i>.</i></a><span class="tag">API v1</span><span class="grow"></span><a class="navlink" href="/user-dashboard.html">Dashboard</a><a class="button" href="/user-login.html">Get API key</a></div></nav>
+<main class="wrap"><header class="hero"><div class="eyebrow">Developer platform</div><h1>API <em>Documentation</em></h1><p>Remove Gemini and Veo watermarks programmatically.<br>REST API, async jobs, signed webhooks, MCP-ready.</p><span class="status"><span class="dot"></span> All systems operational</span></header>
+<div class="layout"><aside class="side"><b>Start</b><a href="#intro">Introduction</a><a href="#auth">Authentication</a><a href="#quick">Quick start</a><b>Removal</b><a href="#image">Remove image</a><a href="#video">Remove video</a><a href="#url">Video URL</a><b>Jobs</b><a href="#status">Job status</a><a href="#jobs">List jobs</a><a href="#download">Download</a><b>Platform</b><a href="#hooks">Webhooks</a><a href="#usage">Usage</a><a href="#mcp">MCP server</a><a href="#errors">Errors</a></aside><div>
+<section id="intro" class="card"><h2>Introduction</h2><p>VioTools API provides watermark removal over standard HTTP with JSON responses. Images run synchronously; videos use asynchronous jobs.</p><div class="label">Base URL</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>https://viotools.my.id/api/v1</pre></div><div class="callout">Use only media you own or have permission to modify. Never expose an API key in client-side code or public repositories.</div></section>
+<section id="auth" class="card"><h2>Authentication</h2><p>Every request requires your key in the <span class="inl">X-API-Key</span> header.</p><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>X-API-Key: YOUR_API_KEY</pre></div><p>Get a key from the <a class="inl" href="/user-dashboard.html">VioTools dashboard</a>. Treat it like a password.</p></section>
+<section id="quick" class="card"><h2>Quick start</h2><p>Check authenticated API readiness.</p><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl https://viotools.my.id/api/v1/health \
+  -H "X-API-Key: YOUR_API_KEY"</pre></div><div class="label">Response · 200</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "status": "ok",
+  "service": "veo-watermark-api",
+  "version": "1.0.0"
+}</pre></div></section>
+<section id="image" class="card"><h2><span class="method post">POST</span><span class="path">/remove/image</span></h2><p>Remove a watermark from an image synchronously.</p><div class="table"><table><tr><th>Field</th><th>Type</th><th>Required</th><th>Details</th></tr><tr><td>image</td><td>multipart file</td><td><span class="req">YES</span></td><td>PNG, JPG, JPEG, WEBP · max 20 MB</td></tr></table></div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl -X POST https://viotools.my.id/api/v1/remove/image \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "image=@/path/to/image.png"</pre></div><div class="label">Response</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "success": true,
+  "downloadUrl": "/api/v1/download/file_processed.png",
+  "filename": "file_processed.png"
+}</pre></div></section>
+<section id="video" class="card"><h2><span class="method post">POST</span><span class="path">/remove/video</span></h2><p>Upload a video and start an asynchronous removal job.</p><div class="table"><table><tr><th>Field</th><th>Type</th><th>Required</th><th>Details</th></tr><tr><td>video</td><td>multipart file</td><td><span class="req">YES</span></td><td>MP4, MOV, MKV, AVI · max 500 MB</td></tr></table></div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl -X POST https://viotools.my.id/api/v1/remove/video \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -F "video=@/path/to/video.mp4"</pre></div><div class="label">Response</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "success": true,
+  "jobId": "abc123-def456",
+  "statusUrl": "/api/v1/status/abc123-def456"
+}</pre></div></section>
+<section id="url" class="card"><h2><span class="method post">POST</span><span class="path">/remove/video-url</span></h2><p>Process a public HTTP(S) video URL directly.</p><div class="table"><table><tr><th>Field</th><th>Type</th><th>Required</th><th>Details</th></tr><tr><td>url</td><td>string</td><td><span class="req">YES</span></td><td>MP4/MOV/MKV/AVI URL · max 500 MB</td></tr></table></div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl -X POST https://viotools.my.id/api/v1/remove/video-url \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://example.com/video.mp4"}'</pre></div></section>
+<section id="status" class="card"><h2><span class="method get">GET</span><span class="path">/status/:jobId</span></h2><p>Poll until status is <span class="inl">completed</span> or <span class="inl">failed</span>.</p><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl https://viotools.my.id/api/v1/status/JOB_ID \
+  -H "X-API-Key: YOUR_API_KEY"</pre></div><div class="label">Completed response</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "jobId": "abc123-def456",
+  "status": "completed",
+  "progress": 100,
+  "downloadUrl": "/api/v1/download/output.mp4"
+}</pre></div></section>
+<section id="jobs" class="card"><h2><span class="method get">GET</span><span class="path">/jobs</span></h2><p>List jobs owned by this API key.</p><div class="table"><table><tr><th>Query</th><th>Required</th><th>Details</th></tr><tr><td>status</td><td><span class="opt">NO</span></td><td>processing, completed, failed</td></tr><tr><td>limit</td><td><span class="opt">NO</span></td><td>Default 20 · max 100</td></tr><tr><td>offset</td><td><span class="opt">NO</span></td><td>Default 0</td></tr></table></div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl "https://viotools.my.id/api/v1/jobs?status=completed&limit=20" \
+  -H "X-API-Key: YOUR_API_KEY"</pre></div></section>
+<section id="download" class="card"><h2><span class="method get">GET</span><span class="path">/download/:filename</span></h2><p>Download a processed file. Keys access only files they own.</p><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl -L -o cleaned.mp4 \
+  https://viotools.my.id/api/v1/download/FILENAME \
+  -H "X-API-Key: YOUR_API_KEY"</pre></div></section>
+<section id="hooks" class="card"><h2>Webhooks</h2><p>Receive <span class="inl">job.completed</span> and <span class="inl">job.failed</span> without polling.</p><h3>Register · POST /webhooks</h3><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl -X POST https://viotools.my.id/api/v1/webhooks \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://yourapp.com/hook",
+       "secret":"WEBHOOK_SECRET",
+       "events":["job.completed","job.failed"]}'</pre></div><h3>Manage</h3><p><span class="method get">GET</span><span class="path">/webhooks</span> &nbsp; List registrations</p><p><span class="method delete">DELETE</span><span class="path">/webhooks/:id</span> &nbsp; Delete registration</p><div class="callout">If a secret is set, verify <span class="inl">X-Webhook-Signature</span> using HMAC-SHA256 over the raw request body.</div></section>
+<section id="usage" class="card"><h2><span class="method get">GET</span><span class="path">/usage</span></h2><p>View request counts, daily limit, and remaining quota.</p><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>curl https://viotools.my.id/api/v1/usage \
+  -H "X-API-Key: YOUR_API_KEY"</pre></div><div class="label">Response</div><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "total": 42,
+  "today": 3,
+  "limit": 100,
+  "remaining": 97,
+  "window": "24 hours"
+}</pre></div></section>
+<section id="mcp" class="card"><h2>MCP server</h2><p>Connect VioTools to Claude Desktop or another Model Context Protocol client.</p><div class="tools"><div class="tool"><code>remove_image_watermark</code><small>Clean a local image.</small></div><div class="tool"><code>remove_video_watermark</code><small>Upload, poll, download.</small></div><div class="tool"><code>remove_video_watermark_url</code><small>Process a public URL.</small></div><div class="tool"><code>check_job_status</code><small>Check an async job.</small></div><div class="tool"><code>list_jobs</code><small>List recent jobs.</small></div><div class="tool"><code>get_usage</code><small>Read quota usage.</small></div></div><h3>Claude Desktop config</h3><div class="codeblock"><button class="copy" type="button" data-copy>Copy</button><pre>{
+  "mcpServers": {
+    "viotools": {
+      "command": "node",
+      "args": ["/absolute/path/mcp-server/index.js"],
+      "env": {
+        "VEO_API_BASE": "https://viotools.my.id/api/v1",
+        "VEO_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}</pre></div></section>
+<section id="errors" class="card"><h2>Errors & limits</h2><div class="errors"><div class="error"><b>400</b>Invalid input or file</div><div class="error"><b>401</b>Missing or invalid key</div><div class="error"><b>403</b>Disabled key / denied</div><div class="error"><b>404</b>Job or file not found</div><div class="error"><b>429</b>Rate limit exceeded</div><div class="error"><b>500</b>Processing failure</div></div><h3>Limits</h3><div class="table"><table><tr><th>Resource</th><th>Limit</th></tr><tr><td>Image upload</td><td>20 MB</td></tr><tr><td>Video upload / URL</td><td>500 MB</td></tr><tr><td>API requests</td><td>Based on API key tier; inspect <span class="inl">/usage</span></td></tr></table></div></section>
+</div></div><footer class="footer">VioTools API v1 · <a href="/">Back to VioTools</a></footer></main><script>
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', async function(){
+    var block=btn.closest('.codeblock');
+    var text=block?block.querySelector('pre').innerText:'';
+    try{await navigator.clipboard.writeText(text)}
+    catch(e){var area=document.createElement('textarea');area.value=text;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove()}
+    btn.textContent='Copied';btn.classList.add('copied');
+    setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},1400);
+  });
+});
+</script></body></html>
