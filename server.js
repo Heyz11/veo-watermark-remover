@@ -246,8 +246,12 @@ app.get('/docs-api', (req, res) => {
 });
 app.get('/api-docs.html', (req, res) => res.redirect(301, '/docs-api'));
 
-// Admin panel (clean URL)
+// Admin panel (clean URL) — relax CSP: page uses inline <script>
 app.get('/admin', (req, res) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net; style-src 'self' https: 'unsafe-inline'; font-src 'self' https: data:; img-src 'self' data: https: blob:; connect-src 'self' https:; media-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+  );
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
