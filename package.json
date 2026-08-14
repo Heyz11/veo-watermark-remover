@@ -3,22 +3,32 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --check server.js && node --check worker.js && node --check mcp.js && node --check upscale-processor.js && node -e \"const assert=require('assert');const {findResultUrl}=require('./upscale-processor');assert.equal(findResultUrl({data:{result:{res_url:'https://example.com/out.mp4'}}}),'https://example.com/out.mp4');assert.equal(findResultUrl({url:'file:///bad'}),null);console.log('upscale checks passed')\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@alyachan/api": "^0.0.20",
+    "@modelcontextprotocol/sdk": "^1.12.0",
     "archiver": "^8.0.0",
+    "axios": "^1.7.9",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
+    "firebase-admin": "13.6.0",
+    "form-data": "^4.0.6",
     "helmet": "^8.2.0",
     "multer": "^2.2.0",
     "node-telegram-bot-api": "^1.1.2",
     "pg": "^8.13.1",
-    "uuid": "^14.0.1"
+    "playwright": "^1.62.0",
+    "redis": "^6.1.0",
+    "ssh2": "^1.17.0",
+    "uuid": "^14.0.1",
+    "zod": "^3.25.0"
   }
 }

@@ -15,7 +15,9 @@ function generateToken() {
 // Admin authentication middleware
 function authenticateAdmin(req, res, next) {
   // Check for session token in cookie or header
-  const token = req.cookies?.admin_token || req.headers['x-admin-token'];
+  const cookieHeader = req.headers.cookie || '';
+  const cookieMatch = cookieHeader.match(/(?:^|;\s*)admin_token=([^;]+)/);
+  const token = req.cookies?.admin_token || (cookieMatch && decodeURIComponent(cookieMatch[1])) || req.headers['x-admin-token'];
   
   if (!token || !sessions.has(token)) {
     return res.status(401).json({
@@ -88,7 +90,9 @@ function adminLogout(req, res) {
 
 // Check auth status
 function adminStatus(req, res) {
-  const token = req.cookies?.admin_token || req.headers['x-admin-token'];
+  const cookieHeader = req.headers.cookie || '';
+  const cookieMatch = cookieHeader.match(/(?:^|;\s*)admin_token=([^;]+)/);
+  const token = req.cookies?.admin_token || (cookieMatch && decodeURIComponent(cookieMatch[1])) || req.headers['x-admin-token'];
   
   if (token && sessions.has(token)) {
     return res.json({
