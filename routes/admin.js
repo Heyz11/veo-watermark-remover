@@ -47,16 +47,52 @@ router.get('/dashboard', async (req, res) => {
       "SELECT COUNT(*) FROM jobs WHERE status = 'completed'"
     );
     const completedJobs = parseInt(completedJobsResult.rows[0].count);
+    // Failed jobs
+    const failedJobsResult = await db.query(
+      "SELECT COUNT(*) FROM jobs WHERE status = 'failed'"
+    );
+    const failedJobs = parseInt(failedJobsResult.rows[0].count);
+
+    // Recent activity feed - latest usage logs with key owner
+    const recentActivityResult = await db.query(`
+      SELECT u.endpoint, u.created_at, k.name as key_name, k.tier
+      FROM usage_logs u
+      LEFT JOIN api_keys k ON k.key = u.api_key
+      ORDER BY u.created_at DESC
+      LIMIT 12
+    `);
+
+    // Recent jobs (any status)
+    const recentJobsResult = await db.query(`
+      SELECT id, type, status, original_name, progress, created_at, completed_at, error
+      FROM jobs
+      ORDER BY created_at DESC
+      LIMIT 8
+    `);
+
+    // Job stats by type (last 7 days)
+    const jobTypeResult = await db.query(`
+      SELECT COALESCE(type, 'watermark') as type, COUNT(*) as count,
+        COUNT(*) FILTER (WHERE status = 'completed') as completed,
+        COUNT(*) FILTER (WHERE status = 'failed') as failed
+      FROM jobs
+      WHERE created_at >= NOW() - INTERVAL '7 days'
+      GROUP BY type
+      ORDER BY count DESC
+    `);
 
     res.json({
       stats: {
-        totalApiKeys,
         todayUsage,
         totalUsage,
         activeJobs,
-        completedJobs
+        completedJobs,
+        failedJobs
       },
       endpointStats: endpointStats.rows,
+      recentActivity: recentActivityResult.rows,
+      recentJobs: recentJobsResult.rows,
+      jobTypeStats: jobTypeResult.rows,
       dailyUsage: dailyUsage.rows
     });
   } catch (error) {
@@ -248,3 +284,5 @@ router.get('/server', async (req, res) => {
 });
 
 module.exports = router;
+
+

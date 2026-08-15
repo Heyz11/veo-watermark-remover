@@ -196,6 +196,100 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* Activity feed */
+        .activity-feed { display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; }
+        .activity-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 9px 12px; border-radius: 10px;
+            background: rgba(20, 184, 166, 0.03);
+            border: 1px solid transparent;
+            transition: background 0.15s ease;
+        }
+        .activity-item:hover { background: rgba(20, 184, 166, 0.07); }
+        .activity-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .activity-main { flex: 1; min-width: 0; }
+        .activity-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .activity-sub { font-size: 11px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .activity-time { font-size: 11px; opacity: 0.55; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+        .micro { font-size: 11px; }
+
+        .status-pill {
+            display: inline-block; padding: 2px 10px; border-radius: 999px;
+            font-size: 11px; font-weight: 700; text-transform: capitalize;
+        }
+        .status-pill.completed { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
+        .status-pill.failed { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+        .status-pill.processing, .status-pill.pending { background: rgba(251, 191, 36, 0.18); color: #d97706; }
+
+        /* Stat cards polish */
+        .admin-stat-card {
+            border-radius: 18px !important;
+            padding: 22px 24px !important;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .admin-stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px -10px rgba(20, 184, 166, 0.25);
+        }
+        .admin-stat-card .stat-number {
+            font-size: 2rem !important;
+            font-weight: 800 !important;
+            background: linear-gradient(135deg, #14b8a6, #0d9488);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .admin-stat-card .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.65; font-weight: 600; }
+
+        /* Stat card count-up */
+        .count-up { display: inline-block; }
+
+        /* Skeleton shimmer */
+        @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+        .skeleton {
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.05) 25%, rgba(0,0,0,0.1) 37%, rgba(0,0,0,0.05) 63%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s infinite linear;
+        }
+
+        /* Empty state */
+        .empty-state { text-align: center; padding: 28px 12px; opacity: 0.55; font-size: 13px; }
+        .empty-state .empty-icon { font-size: 26px; display: block; margin-bottom: 6px; }
+
+        /* Card entrance */
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .section-content > .card, .section-content .admin-stat-card, .section-content .grid-2 > .card {
+            animation: fadeSlideUp 0.45s ease both;
+        }
+        .section-content .admin-stat-card:nth-child(2) { animation-delay: 0.06s; }
+        .section-content .admin-stat-card:nth-child(3) { animation-delay: 0.12s; }
+        .section-content .admin-stat-card:nth-child(4) { animation-delay: 0.18s; }
+        .section-content .grid-2 > .card:nth-child(2) { animation-delay: 0.1s; }
+
+        /* Refresh button */
+        .refresh-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border-radius: 10px; border: 1px solid rgba(20,184,166,0.3);
+            background: rgba(20,184,166,0.06); color: #0d9488;
+            font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .refresh-btn:hover { background: rgba(20,184,166,0.14); }
+        .refresh-btn.spinning svg { animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Sidebar nav active glow */
+        .nav-item.active { box-shadow: 0 4px 14px -4px rgba(20, 184, 166, 0.5); }
         .mb-4 { margin-bottom: 24px; }
         .mb-3 { margin-bottom: 20px; }
         .mb-2 { margin-bottom: 16px; }
@@ -434,8 +528,17 @@
             <!-- Main Content -->
             <div class="admin-main">
                 <div class="admin-header">
-                    <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px;" id="pageTitle">Dashboard</h2>
-                    <p style="color: var(--color-muted); font-size: 15px;" id="pageSubtitle">Overview of your watermark removal service</p>
+                    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+                        <div>
+                            <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4px;" id="pageTitle">Dashboard</h2>
+                            <p style="color: var(--color-muted); font-size: 15px;" id="pageSubtitle">Overview of your watermark removal service</p>
+                        </div>
+                        <button id="refreshBtn" class="refresh-btn" title="Refresh data">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+                            Refresh
+                        </button>
+                    </div>
+
                 </div>
                 <div class="admin-content">
                     <!-- Dashboard -->
@@ -456,6 +559,22 @@
                             <div class="admin-stat-card" style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(251, 191, 36, 0.05));">
                                 <div class="stat-number" id="stat-jobs">-</div>
                                 <div class="stat-label">Active Jobs</div>
+                            </div>
+                        </div>
+                        <div class="grid-2 mb-4">
+                            <div class="card">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="heading-sm">Recent Activity</h3>
+                                    <span class="micro" style="color: var(--muted-foreground, #888);">latest API requests</span>
+                                </div>
+                                <div id="activityFeed" class="activity-feed"></div>
+                            </div>
+                            <div class="card">
+                                <div class="flex justify-between items-center mb-3">
+                                    <h3 class="heading-sm">Recent Jobs</h3>
+                                    <span class="micro" id="jobSuccessRate" style="color: var(--muted-foreground, #888);"></span>
+                                </div>
+                                <div id="recentJobsList" class="activity-feed"></div>
                             </div>
                         </div>
                         <div class="card">
@@ -641,7 +760,8 @@
             document.querySelectorAll('.section-content').forEach(s => s.classList.add('hidden'));
             document.getElementById(`${section}-section`).classList.remove('hidden');
             const titles = { dashboard: 'Dashboard', users: 'API Keys', usage: 'Usage Stats', jobs: 'Jobs', server: 'Server' };
-            document.getElementById('pageTitle').textContent = titles[section] || section;
+            const subtitles = { dashboard: 'Overview of your watermark removal service', users: 'Manage API keys and tiers', usage: 'Request analytics across endpoints', jobs: 'Processing queue and history', server: 'System health and configuration' };
+            document.getElementById('pageSubtitle').textContent = subtitles[section] || '';
             if (section === 'dashboard') loadDashboard();
             if (section === 'users') loadApiKeys();
             if (section === 'usage') loadUsage();
@@ -650,23 +770,134 @@
         });
     });
 
+    // Count-up animation for stat numbers
+    function countUp(el, target) {
+        const value = Number(target) || 0;
+        const duration = 700;
+        const start = performance.now();
+        function tick(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(value * eased).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    function timeAgo(iso) {
+        if (!iso) return '-';
+        const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+        if (s < 60) return s + 's ago';
+        if (s < 3600) return Math.floor(s / 60) + 'm ago';
+        if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+        return Math.floor(s / 86400) + 'd ago';
+    }
+
+    const ENDPOINT_COLORS = {
+        'watermark': '#14b8a6', 'remove': '#14b8a6', 'dola': '#8b5cf6',
+        'veo': '#f59e0b', 'status': '#3b82f6', 'download': '#10b981'
+    };
+    function endpointColor(ep) {
+        ep = (ep || '').toLowerCase();
+        for (const key in ENDPOINT_COLORS) if (ep.includes(key)) return ENDPOINT_COLORS[key];
+        return '#64748b';
+    }
+
+    function renderActivityFeed(items) {
+        const el = document.getElementById('activityFeed');
+        if (!el) return;
+        if (!items || !items.length) {
+            el.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span>No API activity yet</div>';
+            return;
+        }
+        el.innerHTML = items.map(a => `
+            <div class="activity-item">
+                <span class="activity-dot" style="background:${endpointColor(a.endpoint)}"></span>
+                <div class="activity-main">
+                    <div class="activity-title">${escapeHtml(a.endpoint || 'unknown')}</div>
+                    <div class="activity-sub">${escapeHtml(a.key_name || 'anonymous')}${a.tier ? ' · ' + escapeHtml(a.tier) : ''}</div>
+                </div>
+                <span class="activity-time">${timeAgo(a.created_at)}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderRecentJobs(jobs) {
+        const el = document.getElementById('recentJobsList');
+        if (!el) return;
+        if (!jobs || !jobs.length) {
+            el.innerHTML = '<div class="empty-state"><span class="empty-icon">🎬</span>No jobs yet</div>';
+            return;
+        }
+        el.innerHTML = jobs.map(j => {
+            const status = (j.status || 'pending').toLowerCase();
+            const name = j.original_name || (j.id ? String(j.id).slice(0, 8) + '…' : 'job');
+            const progress = status === 'processing' && j.progress ? ` · ${Number(j.progress)}%` : '';
+            return `
+            <div class="activity-item">
+                <span class="activity-dot" style="background:${status === 'completed' ? '#22c55e' : status === 'failed' ? '#ef4444' : '#f59e0b'}"></span>
+                <div class="activity-main">
+                    <div class="activity-title">${escapeHtml(name)}</div>
+                    <div class="activity-sub">${escapeHtml(j.type || 'watermark')}${progress}</div>
+                </div>
+                <span class="status-pill ${status}">${escapeHtml(status)}</span>
+                <span class="activity-time">${timeAgo(j.created_at)}</span>
+            </div>`;
+        }).join('');
+    }
+
+    function renderJobSuccessRate(jobTypeStats) {
+        const el = document.getElementById('jobSuccessRate');
+        if (!el) return;
+        let done = 0, failed = 0;
+        (jobTypeStats || []).forEach(t => { done += Number(t.completed) || 0; failed += Number(t.failed) || 0; });
+        const total = done + failed;
+        el.textContent = total ? `${Math.round((done / total) * 100)}% success (7d)` : '';
+    }
+
+    // Refresh button — reloads current section
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        const btn = document.getElementById('refreshBtn');
+        btn.classList.add('spinning');
+        setTimeout(() => btn.classList.remove('spinning'), 900);
+        const titles = ['dashboard', 'users', 'usage', 'jobs', 'server'];
+        const current = titles.find(t => !document.getElementById(`${t}-section`).classList.contains('hidden')) || 'dashboard';
+        if (current === 'dashboard') loadDashboard();
+        if (current === 'users') loadApiKeys();
+        if (current === 'usage') loadUsage();
+        if (current === 'jobs') loadJobs();
+        if (current === 'server') loadServer();
+    });
     async function loadDashboard() {
         try {
             const res = await fetch(`${API}/dashboard`);
             const data = await res.json();
-            document.getElementById('stat-api-keys').textContent = data.stats.totalApiKeys;
-            document.getElementById('stat-today').textContent = Number(data.stats.todayUsage).toLocaleString();
-            document.getElementById('stat-total').textContent = Number(data.stats.totalUsage).toLocaleString();
-            document.getElementById('stat-jobs').textContent = data.stats.activeJobs;
+            countUp(document.getElementById('stat-api-keys'), data.stats.totalApiKeys);
+            countUp(document.getElementById('stat-today'), data.stats.todayUsage);
+            countUp(document.getElementById('stat-total'), data.stats.totalUsage);
+            countUp(document.getElementById('stat-jobs'), data.stats.activeJobs);
+            renderActivityFeed(data.recentActivity);
+            renderRecentJobs(data.recentJobs);
+            renderJobSuccessRate(data.jobTypeStats);
             if (usageChartInstance) usageChartInstance.destroy();
             const ctx = document.getElementById('usageChart').getContext('2d');
+            const chartGrad = ctx.createLinearGradient(0, 0, 0, 320);
+            chartGrad.addColorStop(0, 'rgba(20, 184, 166, 0.9)');
+            chartGrad.addColorStop(1, 'rgba(20, 184, 166, 0.35)');
             usageChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: (data.dailyUsage || []).map(d => escapeHtml(d.date)),
-                    datasets: [{ label: 'Requests', data: (data.dailyUsage || []).map(d => Number(d.count) || 0), backgroundColor: '#1a3300', borderRadius: 6 }]
+                    labels: (data.dailyUsage || []).map(d => escapeHtml(String(d.date).slice(5))),
+                    datasets: [{ label: 'Requests', data: (data.dailyUsage || []).map(d => Number(d.count) || 0), backgroundColor: chartGrad, borderRadius: 8, maxBarThickness: 38 }]
                 },
-                options: { responsive: true, plugins: { legend: { display: false } } }
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { precision: 0 } }
+                    }
+                }
             });
         } catch (err) { console.error('Dashboard error:', err); }
     }
