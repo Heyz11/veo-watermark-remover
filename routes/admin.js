@@ -82,7 +82,7 @@ router.get('/dashboard', async (req, res) => {
     `);
 
     res.json({
-      stats: {
+      stats: { totalApiKeys,
         todayUsage,
         totalUsage,
         activeJobs,
